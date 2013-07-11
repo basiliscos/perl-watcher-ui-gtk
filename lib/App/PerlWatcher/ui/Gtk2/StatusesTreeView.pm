@@ -4,7 +4,7 @@ use 5.12.0;
 use strict;
 use warnings;
 
-use App::PerlWatcher::Status qw/level_to_symbol :levels/;
+use App::PerlWatcher::ui::Gtk2::Utils qw/level_to_symbol/;
 use Devel::Comments;
 use Gtk2;
 use POSIX qw(strftime);
@@ -57,7 +57,7 @@ sub _constuct_description_column {
             if ( $value->isa('App::PerlWatcher::Status') ) {
                 my $status = $value;
                 $text = sprintf( "[%s] %s",
-                    $status->symbol, $status->description->() );
+                    level_to_symbol($status->level), $status->description->() );
                 $text = "<b>$text</b>" if ($self->_is_unseen($status));
                 $cell->set( markup => "$text" );
             }
