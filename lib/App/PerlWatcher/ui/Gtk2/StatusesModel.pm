@@ -20,8 +20,8 @@ sub new {
     my ($class, $app) = @_;
     my $self = Gtk2::TreeStore->new(qw/Glib::Scalar/);
     $self -> {_watchers} = {};
-    $self -> {_shelf   } = App::PerlWatcher::Shelf->new;          
     $self -> {_engine  } = $app->engine;
+    $self -> {_shelf   } = $app->engine->get_statuses_shelf;
     bless $self, $class;
     
     for (@{ $app->engine->get_watchers }) {
@@ -63,7 +63,7 @@ sub stash_outdated {
         if ( $self->{_shelf}->stash_status($_) ) {
             my $iter = $self -> {_watchers}{ $_->watcher }{iterator};
             my $path = $self->get_path($iter);
-            ### emit event
+            # emit event
             $self->row_changed($path, $iter);
         }
     }

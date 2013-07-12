@@ -37,7 +37,7 @@ sub new {
     $self->_construct_menu;
     
     $icon->signal_connect( "button-press-event" => sub {
-            ### button-press-event
+            # button-press-event
             my ($widget, $event) = @_;
             if ( $event->button == 1 ) { # left
                 my ($x, $y) = $event->root_coords;
@@ -116,7 +116,7 @@ sub _construct_window {
     $window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
     $window->signal_connect( 'focus-out-event' => sub {
-            ### focus out
+            # focus out
             $window->hide;
             $self->{_timers} = []; # kill all timers
             $self->last_seen(time);
