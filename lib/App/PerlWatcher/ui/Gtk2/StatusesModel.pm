@@ -21,7 +21,7 @@ sub new {
     my $self = Gtk2::TreeStore->new(qw/Glib::Scalar/);
     $self -> {_watchers} = {};
     $self -> {_engine  } = $app->engine;
-    $self -> {_shelf   } = $app->engine->get_statuses_shelf;
+    $self -> {_shelf   } = $app->engine->statuses_shelf;
     bless $self, $class;
     
     for (@{ $app->engine->get_watchers }) {
