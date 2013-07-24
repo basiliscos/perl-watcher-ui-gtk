@@ -75,7 +75,10 @@ sub summary {
         max_level => LEVEL_ANY,
         updated   => [],
     };
-    my @statuses = map { $_->{status} } values %{ $self -> {_watchers} };
+    my @statuses =
+        grep { $_->level >= LEVEL_NOTICE} 
+        map { $_->{status} } 
+        values %{ $self -> {_watchers} };
     for ( @statuses ) {
         $result->{max_level} = $_->level
             if ( $result->{max_level} < $_->level );
