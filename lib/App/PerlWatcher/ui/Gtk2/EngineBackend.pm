@@ -1,4 +1,7 @@
 package App::PerlWatcher::ui::Gtk2::EngineBackend;
+{
+  $App::PerlWatcher::ui::Gtk2::EngineBackend::VERSION = '0.02';
+}
 
 use 5.12.0;
 use strict;
