@@ -5,3 +5,7 @@ perl:
   - "5.14"
   - "5.12"
 
+branches:
+  only:
+    - /^build/
+
