@@ -15,7 +15,7 @@ meta-spec:
   version: 1.4
 name: App-PerlWatcher-UI-Gtk2
 requires:
-  App::PerlWatcher::Engine: 0.09
+  App::PerlWatcher::Engine: 0.11
   Devel::Comments: v1.1.4
   File::ShareDir::ProjectDistDir: v0.4.4
   Gtk2: 1.247
