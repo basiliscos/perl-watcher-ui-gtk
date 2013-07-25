@@ -1,6 +1,4 @@
 .travis.yml
-App-PerlWatcher-UI-Gtk2-0.02/.travis.yml
-App-PerlWatcher-UI-Gtk2-0.02/App-PerlWatcher-UI-Gtk2-0.02/.travis.yml
 Changes
 LICENSE
 MANIFEST
@@ -15,6 +13,7 @@ lib/App/PerlWatcher/ui/Gtk2/Application.pm
 lib/App/PerlWatcher/ui/Gtk2/EngineBackend.pm
 lib/App/PerlWatcher/ui/Gtk2/StatusesModel.pm
 lib/App/PerlWatcher/ui/Gtk2/StatusesTreeView.pm
+lib/App/PerlWatcher/ui/Gtk2/SummaryLevelSwitcher.pm
 lib/App/PerlWatcher/ui/Gtk2/Utils.pm
 share/examples/Gtk2.conf.example
 t/000-compilation.t

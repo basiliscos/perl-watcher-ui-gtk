@@ -73,20 +73,20 @@ sub stash_outdated {
 }
 
 sub summary {
-    my $self = shift;
+    my ($self, $minimal_level) = @_;
     my $result = {
         max_level => LEVEL_ANY,
         updated   => [],
     };
     my @statuses =
-        grep { $_->level >= LEVEL_NOTICE} 
         map { $_->{status} } 
         values %{ $self -> {_watchers} };
     for ( @statuses ) {
         $result->{max_level} = $_->level
             if ( $result->{max_level} < $_->level );
         push @{ $result->{updated} }, $_  
-            if $self->{_shelf}->status_changed($_);
+            if $self->{_shelf}->status_changed($_)
+                && $_->level >= $minimal_level;
     }
     return $result;
 }

@@ -9,8 +9,10 @@ use warnings;
 
 use AnyEvent;
 use App::PerlWatcher::Engine;
+use App::PerlWatcher::Level qw/:levels/;
 use App::PerlWatcher::ui::Gtk2::StatusesModel;
 use App::PerlWatcher::ui::Gtk2::StatusesTreeView;
+use App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher;
 use App::PerlWatcher::ui::Gtk2::Utils qw/level_to_symbol/;
 use Devel::Comments;
 use Gtk2;
@@ -34,7 +36,10 @@ sub new {
 
     $self -> {_icon      } = $icon;
     $self -> {_label     } = $label;
-    $self -> {_timers    } = [];          
+    $self -> {_timers    } = [];
+    $self -> {_summary_level} = LEVEL_NOTICE;
+    
+    $self -> {_focus_tracked_widgets} = [];          
 
     $self->_consruct_gui;
     $self->_construct_menu;
@@ -82,7 +87,7 @@ sub show {
 
 sub _update_summary {
     my $self = shift;
-    my $summary = $self->{_tree_store}->summary;
+    my $summary = $self->{_tree_store}->summary($self->{_summary_level});
     # $summary
     my $symbol = level_to_symbol($summary->{max_level});
     $symbol = @{ $summary->{updated} } ? "<b>$symbol</b>" : $symbol;
@@ -118,11 +123,22 @@ sub _construct_window {
     $window->set_skip_taskbar_hint(1);
     $window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
-    $window->signal_connect( 'focus-out-event' => sub {
+    $window->signal_connect('focus-out-event' => sub {
             # focus out
-            $window->hide;
-            $self->{_timers} = []; # kill all timers
-            $self->last_seen(time);
+            my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
+                    my $child_window_focus = @{$self->{_focus_tracked_widgets}};
+                    $child_window_focus &&= $_->considered_active
+                        for(@{$self->{_focus_tracked_widgets}});
+                    my $do_hide = !$child_window_focus;
+                    # $do_hide
+                    if($do_hide) {
+                        $window->hide;
+                        $self->{_timers} = []; # kill all timers
+                        $self->last_seen(time);
+                    }
+                    undef $idle_w;
+             });
+            0;
     });
 
     return $window;
@@ -138,8 +154,15 @@ sub _consruct_gui {
     my $hbox = Gtk2::HBox->new( 0, 5 );
     $vbox->pack_start( $hbox, 0, 0, 0 );
     
-    my $label = Gtk2::Label->new('Action');
-    $hbox->pack_start( $label, 0, 0, 5 );
+    my $summary_level_switcher = App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher
+        ->new($self, sub { $self->{_summary_level} = shift } );
+    push @{ $self->{_focus_tracked_widgets}}, $summary_level_switcher;
+        
+    #my $label = Gtk2::Label->new('Action');
+    #$hbox->pack_start( $label, 0, 0, 5 );
+    
+    $hbox->pack_start( $summary_level_switcher, 0, 0, 5 );
+    
     my $reset_button = Gtk2::Button->new_with_label('Mark as read');
     $reset_button->signal_connect( 'clicked' => sub {
             $self->_mark_as_read;
@@ -186,13 +209,13 @@ sub _construct_menu {
 sub _present {
     my ( $self, $x, $y ) = @_;
     my $window = $self->{_window}; 
-    if ( !$window->get('visible') ) {
+    #if ( !$window->get('visible') ) {
         $window->hide_all;
         $window->move( $x, $y );
         $window->show_all;
         $window->present;
         $self->_trigger_undertaker;
-    }
+    #}
 }
 
 sub _trigger_undertaker {
