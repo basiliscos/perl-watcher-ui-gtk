@@ -1,5 +1,6 @@
 .travis.yml
 App-PerlWatcher-UI-Gtk2-0.02/.travis.yml
+App-PerlWatcher-UI-Gtk2-0.02/App-PerlWatcher-UI-Gtk2-0.02/.travis.yml
 Changes
 LICENSE
 MANIFEST

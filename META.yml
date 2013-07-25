@@ -20,4 +20,4 @@ requires:
   File::ShareDir::ProjectDistDir: v0.4.4
   Gtk2: 1.247
   Gtk2::TrayIcon: 0.06
-version: 0.02
+version: 0.03
