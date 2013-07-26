@@ -1,4 +1,4 @@
-package App::PerlWatcher::ui::Gtk2::Application;
+package App::PerlWatcher::UI::Gtk2::Application;
 
 use 5.12.0;
 use strict;
@@ -7,10 +7,10 @@ use warnings;
 use AnyEvent;
 use App::PerlWatcher::Engine;
 use App::PerlWatcher::Level qw/:levels/;
-use App::PerlWatcher::ui::Gtk2::StatusesModel;
-use App::PerlWatcher::ui::Gtk2::StatusesTreeView;
-use App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher;
-use App::PerlWatcher::ui::Gtk2::Utils qw/get_level_icon/;
+use App::PerlWatcher::UI::Gtk2::StatusesModel;
+use App::PerlWatcher::UI::Gtk2::StatusesTreeView;
+use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
+use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
@@ -150,7 +150,7 @@ sub _consruct_gui {
     my $hbox = Gtk2::HBox->new( 0, 5 );
     $vbox->pack_start( $hbox, 0, 0, 0 );
     
-    my $summary_level_switcher = App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher
+    my $summary_level_switcher = App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher
         ->new($self, sub { $self->{_summary_level} = shift } );
     push @{ $self->{_focus_tracked_widgets}}, $summary_level_switcher;
         
@@ -165,9 +165,9 @@ sub _consruct_gui {
     });    
     $hbox->pack_end( $reset_button, 1, 1, 0 );
 
-    my $tree_store = App::PerlWatcher::ui::Gtk2::StatusesModel
+    my $tree_store = App::PerlWatcher::UI::Gtk2::StatusesModel
         ->new($self);
-    my $treeview   = App::PerlWatcher::ui::Gtk2::StatusesTreeView
+    my $treeview   = App::PerlWatcher::UI::Gtk2::StatusesTreeView
         ->new($tree_store, $self);
     $vbox->pack_start( $treeview, 1, 1, 0 );                       
     

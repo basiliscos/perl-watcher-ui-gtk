@@ -1,4 +1,4 @@
-package App::PerlWatcher::ui::Gtk2::Utils;
+package App::PerlWatcher::UI::Gtk2::Utils;
 
 use 5.12.0;
 use strict;
@@ -20,8 +20,7 @@ memoize('get_level_icon');
 sub get_level_icon {
     my ($level, $unseen) = @_;
     my $postfix = $unseen ? "_new" : "";
-    my $filename = dist_file(__PACKAGE__, "assets/icons/${level}${postfix}.png");
-    ### $filename
+    my $filename = dist_file('App-PerlWatcher-UI-Gtk2', "assets/icons/${level}${postfix}.png");
     return unless -r $filename;
     my @icon_size = Gtk2::IconSize->lookup('menu');
     my $pixbuff = Gtk2::Gdk::Pixbuf->new_from_file_at_scale($filename, @icon_size, 1);

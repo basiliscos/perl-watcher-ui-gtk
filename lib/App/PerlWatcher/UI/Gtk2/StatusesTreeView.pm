@@ -1,10 +1,10 @@
-package App::PerlWatcher::ui::Gtk2::StatusesTreeView;
+package App::PerlWatcher::UI::Gtk2::StatusesTreeView;
 
 use 5.12.0;
 use strict;
 use warnings;
 
-use App::PerlWatcher::ui::Gtk2::Utils qw/get_level_icon/;
+use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
 use POSIX qw(strftime);

@@ -1,4 +1,4 @@
-package App::PerlWatcher::ui::Gtk2::EngineBackend;
+package App::PerlWatcher::UI::Gtk2::EngineBackend;
 
 use 5.12.0;
 use strict;

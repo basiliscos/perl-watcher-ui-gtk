@@ -1,4 +1,4 @@
-package App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher;
+package App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 
 use 5.12.0;
 use strict;

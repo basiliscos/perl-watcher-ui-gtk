@@ -1,4 +1,4 @@
-package App::PerlWatcher::ui::Gtk2::StatusesModel;
+package App::PerlWatcher::UI::Gtk2::StatusesModel;
 
 use 5.12.0;
 use strict;
