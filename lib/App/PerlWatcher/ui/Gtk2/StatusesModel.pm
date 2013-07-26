@@ -7,7 +7,6 @@ use warnings;
 use AnyEvent;
 use App::PerlWatcher::Level qw/:levels/;
 use App::PerlWatcher::Shelf;
-use App::PerlWatcher::ui::Gtk2::Utils qw/level_to_symbol/;
 use Carp;
 use Devel::Comments;
 use List::Util qw/max/;
@@ -90,7 +89,6 @@ sub summary {
 
 sub _update_status {
     my ($self, $iterator, $status ) = @_;
-    my $label  = sprintf( "[%s] %s", level_to_symbol($status->level), $status->description->() );
     $self->set( $iterator, 0 => $status );
     $self->_update_event_items($iterator, $status);
 }

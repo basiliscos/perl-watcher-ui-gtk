@@ -10,7 +10,7 @@ use App::PerlWatcher::Level qw/:levels/;
 use App::PerlWatcher::ui::Gtk2::StatusesModel;
 use App::PerlWatcher::ui::Gtk2::StatusesTreeView;
 use App::PerlWatcher::ui::Gtk2::SummaryLevelSwitcher;
-use App::PerlWatcher::ui::Gtk2::Utils qw/level_to_symbol/;
+use App::PerlWatcher::ui::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
@@ -27,15 +27,14 @@ sub new {
     my $icon      = Gtk2::TrayIcon->new("test");
     my $event_box = Gtk2::EventBox->new;
 
-    my $label = Gtk2::Label->new("test");
-    $event_box->add($label);
+    my $icon_widget = Gtk2::Image->new;
+    $event_box->add($icon_widget);
     $icon->add($event_box);
 
-    $self -> {_icon      } = $icon;
-    $self -> {_label     } = $label;
-    $self -> {_timers    } = [];
-    $self -> {_summary_level} = LEVEL_NOTICE;
-    
+    $self -> {_icon                 } = $icon;
+    $self -> {_icon_widget          } = $icon_widget;
+    $self -> {_timers               } = [];
+    $self -> {_summary_level        } = LEVEL_NOTICE;
     $self -> {_focus_tracked_widgets} = [];          
 
     $self->_consruct_gui;
@@ -58,9 +57,7 @@ sub new {
             return 0;
     });
 
-    #$label->set_has_tooltip(1);
-    #$label->set_tooltip_window( $self->{_window} );
-
+    $self->_set_label("just started", LEVEL_ANY, 0);
     return $self;
 }
 
@@ -86,26 +83,23 @@ sub _update_summary {
     my $self = shift;
     my $summary_level = $self->{_summary_level};
     my $summary = $self->{_tree_store}->summary($summary_level);
-    my $symbol = level_to_symbol($summary->{max_level});
-    $symbol = @{ $summary->{updated} } ? "<b>$symbol</b>" : $symbol;
+    my $has_updated =  @{ $summary->{updated} };
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
-    $symbol = "[$symbol]";
-    my $tip = join "\n", map {
-            sprintf("[%s] %s", level_to_symbol($_->level), $_->description->())
-        } @$sorted_statuses;
+    my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
     my $notification_level = "notificaiton level: $summary_level"; 
     $tip = sprintf("%s %s (%s)",
                 "PerlWatcher",
                 $App::PerlWatcher::Engine::VERSION // "dev", 
                 $notification_level)
         . ($tip ? "\n\n" . $tip : "");
-    $self->_set_label($symbol, $tip);
+    $self->_set_label($tip, $summary->{max_level}, $has_updated);
 }
 
 sub _set_label {
-    my ( $self, $text, $tip ) = @_;
-    $self->{_label}->set_markup($text);
-    $self->{_label}->set_tooltip_markup($tip);
+    my ( $self, $tip, $level, $is_new ) = @_;
+    my $icon = get_level_icon($level, $is_new);
+    $self->{_icon_widget}->set_tooltip_markup($tip);
+    $self->{_icon_widget}->set(pixbuf => $icon);
 }
 
 sub _construct_window {
@@ -160,8 +154,8 @@ sub _consruct_gui {
         ->new($self, sub { $self->{_summary_level} = shift } );
     push @{ $self->{_focus_tracked_widgets}}, $summary_level_switcher;
         
-    #my $label = Gtk2::Label->new('Action');
-    #$hbox->pack_start( $label, 0, 0, 5 );
+    #my $icon_widget = Gtk2::Label->new('Action');
+    #$hbox->pack_start( $icon_widget, 0, 0, 5 );
     
     $hbox->pack_start( $summary_level_switcher, 0, 0, 5 );
     

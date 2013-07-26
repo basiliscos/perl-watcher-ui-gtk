@@ -4,7 +4,7 @@ use 5.12.0;
 use strict;
 use warnings;
 
-use App::PerlWatcher::ui::Gtk2::Utils qw/level_to_symbol/;
+use App::PerlWatcher::ui::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
 use POSIX qw(strftime);
@@ -30,13 +30,43 @@ sub _is_unseen {
     #my $r = $status->timestamp > $last_seen;
     my $r = $self->{_tree_store}->shelf->status_changed($status);
     return $r;
-}
+}                        
 
 sub _construct {
     my $self = shift;
+    $self -> _constuct_icon_column;
     $self -> _constuct_description_column;
     $self -> _constuct_activation_column;
     $self -> _constuct_timestamp_column;
+}
+
+sub _get_status_icon {
+    my ($self, $status) = @_;
+    return get_level_icon($status->level, $self->_is_unseen($status));
+}
+
+sub _constuct_icon_column {
+    my $self = shift;
+    my $renderer_icon = Gtk2::CellRendererPixbuf->new;
+    $renderer_icon->set('stock-id' => 1);
+    
+    my $column_icon = Gtk2::TreeViewColumn->new;
+    $column_icon->pack_start( $renderer_icon, 0 );
+    $self->append_column($column_icon);
+    $column_icon->set_cell_data_func(
+        $renderer_icon,
+        sub {
+            my ( $column, $cell, $model, $iter, $func_data ) = @_;
+            my $value = $model->get_value( $iter, 0 );
+            if ( $value->isa('App::PerlWatcher::Status') ) {
+                my $pixbuff = $self->_get_status_icon($value);
+                $cell->set( pixbuf => $pixbuff)
+                    if $pixbuff;
+            } else {
+                $cell->set( pixbuf => undef);
+            }
+        }
+    );
 }
 
 sub _constuct_description_column {
@@ -56,14 +86,13 @@ sub _constuct_description_column {
             my $text;
             if ( $value->isa('App::PerlWatcher::Status') ) {
                 my $status = $value;
-                $text = sprintf( "[%s] %s",
-                    level_to_symbol($status->level), $status->description->() );
+                $text = $status->description->();
                 $text = "<b>$text</b>" if ($self->_is_unseen($status));
                 $cell->set( markup => "$text" );
             }
             else {
                 $cell->set( text => $value -> content );
-            }
+            }                                 
             
         }
     );
