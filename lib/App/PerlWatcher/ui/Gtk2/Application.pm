@@ -84,8 +84,8 @@ sub show {
 
 sub _update_summary {
     my $self = shift;
-    my $summary = $self->{_tree_store}->summary($self->{_summary_level});
-    # $summary
+    my $summary_level = $self->{_summary_level};
+    my $summary = $self->{_tree_store}->summary($summary_level);
     my $symbol = level_to_symbol($summary->{max_level});
     $symbol = @{ $summary->{updated} } ? "<b>$symbol</b>" : $symbol;
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
@@ -93,7 +93,11 @@ sub _update_summary {
     my $tip = join "\n", map {
             sprintf("[%s] %s", level_to_symbol($_->level), $_->description->())
         } @$sorted_statuses;
-    $tip = sprintf("%s %s","PerlWatcher",$App::PerlWatcher::Engine::VERSION // "dev")
+    my $notification_level = "notificaiton level: $summary_level"; 
+    $tip = sprintf("%s %s (%s)",
+                "PerlWatcher",
+                $App::PerlWatcher::Engine::VERSION // "dev", 
+                $notification_level)
         . ($tip ? "\n\n" . $tip : "");
     $self->_set_label($symbol, $tip);
 }
