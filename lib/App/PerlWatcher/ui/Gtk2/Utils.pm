@@ -19,7 +19,7 @@ use parent qw/Exporter/;
 
 our @EXPORT_OK = qw/get_level_icon/;
 
-memoize('get_level_icon');
+#memoize('get_level_icon');
 sub get_level_icon {
     my ($level, $unseen) = @_;
     my $postfix = $unseen ? "_new" : "";
