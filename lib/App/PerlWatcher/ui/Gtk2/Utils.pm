@@ -19,7 +19,8 @@ our @EXPORT_OK = qw/get_level_icon/;
 memoize('get_level_icon');
 sub get_level_icon {
     my ($level, $unseen) = @_;
-    my $filename = dist_file(__PACKAGE__, "assets/icons/${level}.png");
+    my $postfix = $unseen ? "_new" : "";
+    my $filename = dist_file(__PACKAGE__, "assets/icons/${level}${postfix}.png");
     ### $filename
     return unless -r $filename;
     my @icon_size = Gtk2::IconSize->lookup('menu');
