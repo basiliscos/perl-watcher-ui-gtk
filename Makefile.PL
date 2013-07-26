@@ -18,13 +18,13 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => "6.30",
     "File::ShareDir::Install" => "0.03"
   },
-  "DISTNAME" => "App-PerlWatcher-ui-Gtk2",
+  "DISTNAME" => "App-PerlWatcher-UI-Gtk2",
   "EXE_FILES" => [
     "bin/perl-watcher-gtk",
     "bin/perl-watcher-gtk"
   ],
   "LICENSE" => "perl",
-  "NAME" => "App::PerlWatcher::ui::Gtk2",
+  "NAME" => "App::PerlWatcher::UI::Gtk2",
   "PREREQ_PM" => {
     "App::PerlWatcher::Engine" => "0.11",
     "Devel::Comments" => "v1.1.4",
