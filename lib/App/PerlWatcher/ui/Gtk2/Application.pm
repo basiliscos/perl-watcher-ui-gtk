@@ -126,11 +126,12 @@ sub _construct_window {
     $window->signal_connect('focus-out-event' => sub {
             # focus out
             my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
-                    my $child_window_focus = @{$self->{_focus_tracked_widgets}};
+                    my $has_tracked_widgets = @{$self->{_focus_tracked_widgets}};
+                    my $child_window_focus = 0;
                     $child_window_focus &&= $_->considered_active
                         for(@{$self->{_focus_tracked_widgets}});
-                    my $do_hide = !$child_window_focus;
-                    # $do_hide
+                    my $do_hide = ($has_tracked_widgets && $child_window_focus);
+                    ### $do_hide
                     if($do_hide) {
                         $window->hide;
                         $self->{_timers} = []; # kill all timers

@@ -16,4 +16,5 @@ lib/App/PerlWatcher/ui/Gtk2/StatusesTreeView.pm
 lib/App/PerlWatcher/ui/Gtk2/SummaryLevelSwitcher.pm
 lib/App/PerlWatcher/ui/Gtk2/Utils.pm
 share/examples/Gtk2.conf.example
+simple.pl
 t/000-compilation.t
