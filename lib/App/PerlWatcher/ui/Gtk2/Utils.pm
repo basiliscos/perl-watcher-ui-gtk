@@ -9,23 +9,24 @@ use warnings;
 
 use Carp;
 use Devel::Comments;
+use File::ShareDir::ProjectDistDir ':all';
+use Gtk2;
+use Memoize;
+
 use App::PerlWatcher::Level qw/:levels/;
 
 use parent qw/Exporter/;
 
-our @EXPORT_OK = qw/level_to_symbol/;
+our @EXPORT_OK = qw/get_level_icon/;
 
-our %_SYMBOLS_FOR = (
-    'unknown'   => '?',
-    'notice'    => 'n',
-    'info'      => 'i',
-    'warn'      => 'w',
-    'alert'     => 'A',
-    'ignore'    => '-',
-);
-
-sub level_to_symbol {
-    my $level = shift;
-    return $_SYMBOLS_FOR{$level};
+memoize('get_level_icon');
+sub get_level_icon {
+    my ($level, $unseen) = @_;
+    my $postfix = $unseen ? "_new" : "";
+    my $filename = dist_file(__PACKAGE__, "assets/icons/${level}${postfix}.png");
+    ### $filename
+    return unless -r $filename;
+    my @icon_size = Gtk2::IconSize->lookup('menu');
+    my $pixbuff = Gtk2::Gdk::Pixbuf->new_from_file_at_scale($filename, @icon_size, 1);
+    return $pixbuff;
 }
-
