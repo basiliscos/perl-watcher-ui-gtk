@@ -1,6 +1,6 @@
-package App::PerlWatcher::ui::Gtk2::StatusesModel;
+package App::PerlWatcher::UI::Gtk2::StatusesModel;
 {
-  $App::PerlWatcher::ui::Gtk2::StatusesModel::VERSION = '0.03';
+  $App::PerlWatcher::UI::Gtk2::StatusesModel::VERSION = '0.03';
 }
 
 use 5.12.0;

@@ -1,6 +1,6 @@
-package App::PerlWatcher::ui::Gtk2::Utils;
+package App::PerlWatcher::UI::Gtk2::Utils;
 {
-  $App::PerlWatcher::ui::Gtk2::Utils::VERSION = '0.03';
+  $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.03';
 }
 
 use 5.12.0;
@@ -23,7 +23,7 @@ our @EXPORT_OK = qw/get_level_icon/;
 sub get_level_icon {
     my ($level, $unseen) = @_;
     my $postfix = $unseen ? "_new" : "";
-    my $filename = dist_file(__PACKAGE__, "assets/icons/${level}${postfix}.png");
+    my $filename = module_file(__PACKAGE__, "assets/icons/${level}${postfix}.png");
     ### $filename
     return unless -r $filename;
     my @icon_size = Gtk2::IconSize->lookup('menu');
