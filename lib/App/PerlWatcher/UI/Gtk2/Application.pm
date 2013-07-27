@@ -153,10 +153,8 @@ sub _consruct_gui {
     my $summary_level_switcher = App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher
         ->new($self, sub { $self->{_summary_level} = shift } );
     push @{ $self->{_focus_tracked_widgets}}, $summary_level_switcher;
+    $summary_level_switcher->set_active_level($self->{_summary_level});
         
-    #my $icon_widget = Gtk2::Label->new('Action');
-    #$hbox->pack_start( $icon_widget, 0, 0, 5 );
-    
     $hbox->pack_start( $summary_level_switcher, 0, 0, 5 );
     
     my $reset_button = Gtk2::Button->new_with_label('Mark as read');
