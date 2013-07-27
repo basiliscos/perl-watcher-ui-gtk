@@ -1,4 +1,6 @@
 {{$NEXT}}
+    Added summary level selector
+    Added nice graphical icons done by Hanna Mineeva
 
 0.03      2013-07-25 12:32:36 Europe/Minsk
     Update PerlWatcher-Engine to using persistent shelf
