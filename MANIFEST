@@ -1,6 +1,7 @@
 .travis.yml
 App-PerlWatcher-UI-Gtk2-0.03/.travis.yml
 App-PerlWatcher-UI-Gtk2-0.03/App-PerlWatcher-UI-Gtk2-0.03/.travis.yml
+App-PerlWatcher-UI-Gtk2-0.03/App-PerlWatcher-UI-Gtk2-0.03/App-PerlWatcher-UI-Gtk2-0.03/.travis.yml
 Changes
 LICENSE
 MANIFEST
@@ -11,6 +12,7 @@ README.md
 TODO
 bin/perl-watcher-gtk
 dist.ini
+lib/App/PerlWatcher/UI/Gtk2/.SummaryLevelSwitcher.pm.marks
 lib/App/PerlWatcher/UI/Gtk2/Application.pm
 lib/App/PerlWatcher/UI/Gtk2/EngineBackend.pm
 lib/App/PerlWatcher/UI/Gtk2/StatusesModel.pm
