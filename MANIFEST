@@ -10,7 +10,6 @@ TODO
 bin/gtk-treeview-action
 bin/perl-watcher-gtk
 dist.ini
-gtkcellrenderertext.c
 lib/App/PerlWatcher/UI/Gtk2/Application.pm
 lib/App/PerlWatcher/UI/Gtk2/EngineBackend.pm
 lib/App/PerlWatcher/UI/Gtk2/StatusesModel.pm
