@@ -7,6 +7,8 @@ use 5.12.0;
 use strict;
 use warnings;
 
+use aliased 'App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf' => 'CRAP';
+use aliased 'App::PerlWatcher::Level' => 'Level', qw/:levels/;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
@@ -40,7 +42,24 @@ sub _construct {
     $self -> _constuct_icon_column;
     $self -> _constuct_description_column;
     $self -> _constuct_activation_column;
+    $self -> _constuct_actions_column;
     $self -> _constuct_timestamp_column;
+}
+
+sub _constuct_actions_column {
+    my $self = shift;
+    my $renderer = CRAP->new;
+    my $column = Gtk2::TreeViewColumn->new;
+    $column->pack_start( $renderer, 0 );
+    $self->append_column($column);
+    $column->set_cell_data_func(
+        $renderer, 
+        sub {
+            my ( $column, $cell, $model, $iter, $func_data ) = @_;
+            my $pixbuff = get_level_icon(LEVEL_NOTICE, 1);
+            $cell->set(pixbuf => $pixbuff)
+        }
+    );
 }
 
 sub _get_status_icon {

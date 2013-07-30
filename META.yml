@@ -20,4 +20,5 @@ requires:
   File::ShareDir::ProjectDistDir: v0.4.4
   Gtk2: 1.247
   Gtk2::TrayIcon: 0.06
+  aliased: 0.31
 version: 0.04

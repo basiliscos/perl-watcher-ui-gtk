@@ -20,7 +20,9 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "App-PerlWatcher-UI-Gtk2",
   "EXE_FILES" => [
+    "bin/gtk-treeview-action",
     "bin/perl-watcher-gtk",
+    "bin/gtk-treeview-action",
     "bin/perl-watcher-gtk"
   ],
   "LICENSE" => "perl",
@@ -30,7 +32,8 @@ my %WriteMakefileArgs = (
     "Devel::Comments" => "v1.1.4",
     "File::ShareDir::ProjectDistDir" => "v0.4.4",
     "Gtk2" => "1.247",
-    "Gtk2::TrayIcon" => "0.06"
+    "Gtk2::TrayIcon" => "0.06",
+    "aliased" => "0.31"
   },
   "TEST_REQUIRES" => {
     "Test::More" => "0.98"
