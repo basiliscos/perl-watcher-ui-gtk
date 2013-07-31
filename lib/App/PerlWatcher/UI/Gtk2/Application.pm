@@ -17,15 +17,14 @@ use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
+use Moo;
 use POSIX qw(strftime);
 use Scalar::Util qw/weaken/;
 
-use base qw/App::PerlWatcher::Frontend/;
+with qw/App::PerlWatcher::Frontend/;
 
-sub new {
-    my ( $class, $engine ) = @_;
-    my $self = $class->SUPER::new($engine);
-    
+sub BUILD {
+    my $self = shift;
     Gtk2->init;
     my $icon      = Gtk2::TrayIcon->new("test");
     my $event_box = Gtk2::EventBox->new;
@@ -129,7 +128,7 @@ sub _construct_window {
                     $child_window_focus &&= $_->considered_active
                         for(@{$self->{_focus_tracked_widgets}});
                     my $do_hide = ($has_tracked_widgets && $child_window_focus);
-                    ### $do_hide
+                    # $do_hide
                     if($do_hide) {
                         $window->hide;
                         $self->{_timers} = []; # kill all timers
