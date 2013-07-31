@@ -7,6 +7,7 @@ use warnings;
 use AnyEvent;
 use App::PerlWatcher::Level qw/:levels/;
 use App::PerlWatcher::Shelf;
+use aliased 'App::PerlWatcher::Status';
 use Carp;
 use Devel::Comments;
 use List::Util qw/max/;
@@ -23,10 +24,14 @@ sub new {
     $self -> {_shelf   } = $app->engine->statuses_shelf;
     bless $self, $class;
     
-    for (@{ $app->engine->get_watchers }) {
+    for my $watcher (@{ $app->engine->get_watchers }) {
         my $iter = $self->append(undef);
-        my $status = $_->initial_status;
-        $self -> {_watchers}{ $_ } = {
+        my $status = Status->new(
+            watcher     => $watcher,
+            level       => LEVEL_ANY,
+            description => sub { $watcher->description; },
+        );
+        $self -> {_watchers}{ $watcher } = {
             status   =>  $status,
             iterator => $iter, 
         };
