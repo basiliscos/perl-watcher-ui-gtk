@@ -28,7 +28,7 @@ my $config = merge(
 
 my $backend = 'Gtk2';
 my $engine = App::PerlWatcher::Engine->new($config, $backend);
-my $app = App::PerlWatcher::UI::Gtk2::Application->new($engine);
+my $app = App::PerlWatcher::UI::Gtk2::Application->new(engine => $engine);
 
 $engine->frontend( $app );
 
