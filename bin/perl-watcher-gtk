@@ -12,8 +12,8 @@ use FindBin;
 BEGIN { unshift @INC, "$FindBin::Bin/../lib" }
 
 use App::PerlWatcher::Util::Bootstrap qw/get_home_file config engine_config/;
-use App::PerlWatcher::Engine;
-use App::PerlWatcher::UI::Gtk2::Application;
+use aliased 'App::PerlWatcher::Engine';
+use aliased 'App::PerlWatcher::UI::Gtk2::Application';
 
 my $config = merge(
     engine_config(), 
@@ -26,9 +26,8 @@ my $config = merge(
     )
 );
 
-my $backend = 'Gtk2';
-my $engine = App::PerlWatcher::Engine->new($config, $backend);
-my $app = App::PerlWatcher::UI::Gtk2::Application->new(engine => $engine);
+my $engine = Engine->new(config => $config, backend_id => 'Gtk2');
+my $app = Application->new(engine => $engine);
 
 $engine->frontend( $app );
 
