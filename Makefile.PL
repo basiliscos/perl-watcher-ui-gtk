@@ -20,9 +20,7 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "App-PerlWatcher-UI-Gtk2",
   "EXE_FILES" => [
-    "bin/gtk-treeview-action",
     "bin/perl-watcher-gtk",
-    "bin/gtk-treeview-action",
     "bin/perl-watcher-gtk"
   ],
   "LICENSE" => "perl",

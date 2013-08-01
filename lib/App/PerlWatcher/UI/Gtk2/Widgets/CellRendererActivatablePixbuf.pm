@@ -19,9 +19,11 @@ sub INIT_INSTANCE {
 
 sub ACTIVATE {
     my ($cell, $event, $widget, $path, $background_area, $cell_area, $flags) = @_;
-    ### activate
-    $cell->signal_emit("activated", $path);
-    return 1;
+    if($cell->get('pixbuf')){
+        $cell->signal_emit("activated", $path);
+        return 1;
+    }
+    return 0;
 }
 
 1;
