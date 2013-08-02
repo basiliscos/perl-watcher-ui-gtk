@@ -32,6 +32,12 @@ my $app = Application->new(engine => $engine);
 $engine->frontend( $app );
 
 $app->show;
+
+$SIG{INT} = $SIG{TERM} = sub {
+    ### exiting
+    $app->quit;
+};
+
 $engine->start;
 
 1;

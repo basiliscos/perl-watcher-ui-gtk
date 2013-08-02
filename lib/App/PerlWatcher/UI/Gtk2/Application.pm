@@ -78,6 +78,11 @@ sub show {
     $self->{_icon}->show_all();
 }
 
+sub quit {
+    my $self = shift;
+    $self->engine->stop;
+}
+
 sub _update_summary {
     my $self = shift;
     my $summary_level = $self->{_summary_level};
@@ -192,7 +197,7 @@ sub _construct_menu {
     
     my $menu_item_quit = Gtk2::MenuItem->new('quit');
     $menu_item_quit->signal_connect('activate' => sub {
-            $self->_quit;
+            $self->quit;
     });
     $tray_menu->append($menu_item_quit);
     
@@ -229,11 +234,6 @@ sub _mark_as_read {
     $self->{_timers} = [];
     $self->{_tree_store}->stash_outdated(time);
     $self->_update_summary;
-}
-
-sub _quit {
-    my $self = shift;
-    $self->engine->stop;
 }
 
 1;
