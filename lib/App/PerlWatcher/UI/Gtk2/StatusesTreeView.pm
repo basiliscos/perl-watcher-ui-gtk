@@ -4,7 +4,10 @@ use 5.12.0;
 use strict;
 use warnings;
 
-use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
+use aliased 'App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf' => 'CRAP';
+use aliased 'App::PerlWatcher::Level' => 'Level', qw/:levels/;
+use App::PerlWatcher::Openable;
+use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon/;
 use Devel::Comments;
 use Gtk2;
 use POSIX qw(strftime);
@@ -37,7 +40,35 @@ sub _construct {
     $self -> _constuct_icon_column;
     $self -> _constuct_description_column;
     $self -> _constuct_activation_column;
+    $self -> _constuct_actions_column;
     $self -> _constuct_timestamp_column;
+}
+
+sub _constuct_actions_column {
+    my $self = shift;
+    my $renderer = CRAP->new;
+    my $column = Gtk2::TreeViewColumn->new;
+    $column->pack_start( $renderer, 0 );
+    $self->append_column($column);
+    $column->set_cell_data_func(
+        $renderer, 
+        sub {
+            my ( $column, $cell, $model, $iter, $func_data ) = @_;
+            my $value = $model->get_value( $iter, 0 );
+            my $pixbuff = 
+                $value->does('App::PerlWatcher::Openable')
+                ? get_icon("open-link")
+                :  undef;
+            $cell->set(pixbuf => $pixbuff)
+        }
+    );
+    my $model = $self->{_tree_store};
+    $renderer->signal_connect("activated" => sub {
+            ### got activation signal
+            my ( $cell, $path ) = @_;
+            my $iter = $model->get_iter_from_string($path);
+            $model->get_value( $iter, 0 )->open_url;
+    });
 }
 
 sub _get_status_icon {
