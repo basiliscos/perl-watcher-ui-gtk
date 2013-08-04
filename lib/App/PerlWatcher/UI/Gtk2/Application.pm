@@ -27,6 +27,7 @@ has 'icon'                  => ( is => 'lazy');
 has 'icon_widget'           => ( is => 'lazy');
 has 'tray_menu'             => ( is => 'lazy');
 has 'window'                => ( is => 'lazy');
+has 'title'                 => ( is => 'lazy');
 has 'statuses_tree'         => ( is => 'lazy');
 has 'timers'                => ( is => 'rw', default => sub{ []; } );
 has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
@@ -68,6 +69,13 @@ sub _build_icon_widget {
     Gtk2::Image->new;
 }
 
+sub _build_title {
+    my $self = shift;
+    sprintf("%s %s",
+        "PerlWatcher",
+        $App::PerlWatcher::Engine::VERSION // "dev"); 
+}
+
 sub _build_tray_menu {
     my $self = shift;
     weaken $self;
@@ -99,7 +107,7 @@ sub _build_window {
       // [ 500, 300 ];
 
     $window->set_default_size(@$default_size);
-    $window->set_title('Title');
+    $window->set_title($self->title);
 
     #$window -> set_decorated(0);
     #$window -> set_opacity(0); # not works yet
@@ -167,11 +175,7 @@ sub _update_summary {
     my $has_updated =  @{ $summary->{updated} };
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
     my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
-    my $notification_level = "notificaiton level: $summary_level"; 
-    $tip = sprintf("%s %s (%s)",
-                "PerlWatcher",
-                $App::PerlWatcher::Engine::VERSION // "dev", 
-                $notification_level)
+    $tip = sprintf("%s (notificaiton level: %s)", $self->title,  $summary_level)
         . ($tip ? "\n\n" . $tip : "");
     $self->_set_label($tip, $summary->{max_level}, $has_updated);
 }
