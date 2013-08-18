@@ -38,6 +38,8 @@ $SIG{INT} = $SIG{TERM} = sub {
     $app->quit;
 };
 
+#$app->_present;
+
 $engine->start;
 
 1;

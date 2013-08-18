@@ -122,24 +122,6 @@ sub _build_window {
     $window->set_skip_taskbar_hint(1);
     $window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
-    $window->signal_connect('focus-out-event' => sub {
-            # focus out
-            my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
-                    my $has_tracked_widgets = @{ $self->focus_tracked_widgets };
-                    my $child_window_focus = 0;
-                    $child_window_focus &&= $_->considered_active
-                        for(@{ $self->focus_tracked_widgets });
-                    my $do_hide = ($has_tracked_widgets && $child_window_focus);
-                    # $do_hide
-                    if($do_hide) {
-                        $window->hide;
-                        $self->timers([]); # kill all timers
-                        $self->last_seen(time);
-                    }
-                    undef $idle_w;
-             });
-            0;
-    });
 
     return $window;
 }
@@ -168,7 +150,8 @@ sub update {
 
 sub show {
     my $self = shift;
-    $self->icon->show_all();
+    $self->icon->show_all;
+    $self->_present(0,0);
 }
 
 sub quit {
