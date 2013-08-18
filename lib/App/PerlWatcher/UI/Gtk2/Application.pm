@@ -34,6 +34,14 @@ has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
 
+=attr last_seen
+
+The timestamp last seen of user-visible watcher statuses.
+
+=cut
+has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
+
+
 sub _build_statuses_tree {
     my $self = shift;
     return StatusesTreeView->new($self->statuses_model, $self);
