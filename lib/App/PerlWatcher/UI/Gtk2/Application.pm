@@ -6,7 +6,7 @@ use warnings;
 
 use AnyEvent;
 use App::PerlWatcher::Engine;
-use App::PerlWatcher::Level qw/:levels/;
+use App::PerlWatcher::Levels;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
 use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
@@ -24,17 +24,26 @@ has 'icon'                  => ( is => 'lazy');
 has 'icon_widget'           => ( is => 'lazy');
 has 'tray_menu'             => ( is => 'lazy');
 has 'window'                => ( is => 'lazy');
+has 'title'                 => ( is => 'lazy');
 has 'statuses_tree'         => ( is => 'lazy');
 has 'timers'                => ( is => 'rw', default => sub{ []; } );
 has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
 
+=attr last_seen
+
+The timestamp last seen of user-visible watcher statuses.
+
+=cut
+has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
+
+
 sub _build_statuses_tree {
     my $self = shift;
     return StatusesTreeView->new($self->statuses_model, $self);
 }
-        
+
 sub _build_icon {
     my $self = shift;
     my $icon = Gtk2::TrayIcon->new("test");
@@ -54,7 +63,7 @@ sub _build_icon {
             }
             return 0;
     });
-    
+
     my $event_box = Gtk2::EventBox->new;
     $icon->add($event_box);
     $event_box->add($self->icon_widget);
@@ -65,20 +74,27 @@ sub _build_icon_widget {
     Gtk2::Image->new;
 }
 
+sub _build_title {
+    my $self = shift;
+    sprintf("%s %s",
+        "PerlWatcher",
+        $App::PerlWatcher::Engine::VERSION // "dev");
+}
+
 sub _build_tray_menu {
     my $self = shift;
     weaken $self;
-    
+
     my $tray_menu = Gtk2::Menu->new();
-    
+
     my $menu_read = Gtk2::MenuItem->new('mark all as read');
     $menu_read->signal_connect('activate' => sub {
             $self->_mark_as_read;
     });
     $tray_menu->append($menu_read);
-    
+
     $tray_menu->append(Gtk2::SeparatorMenuItem->new());
-    
+
     my $menu_item_quit = Gtk2::MenuItem->new('quit');
     $menu_item_quit->signal_connect('activate' => sub {
             $self->quit;
@@ -96,7 +112,7 @@ sub _build_window {
       // [ 500, 300 ];
 
     $window->set_default_size(@$default_size);
-    $window->set_title('Title');
+    $window->set_title($self->title);
 
     #$window -> set_decorated(0);
     #$window -> set_opacity(0); # not works yet
@@ -128,9 +144,9 @@ sub _build_window {
 sub BUILD {
     my $self = shift;
     Gtk2->init;
-    
+
     $self->_consruct_gui;
-    
+
     $self->_set_label("just started", LEVEL_ANY, 0);
     return $self;
 }
@@ -146,7 +162,7 @@ sub update {
     $self->_trigger_undertaker if ( $visible );
     $self->_update_summary;
 }
-                                  
+
 sub show {
     my $self = shift;
     $self->icon->show_all();
@@ -164,11 +180,7 @@ sub _update_summary {
     my $has_updated =  @{ $summary->{updated} };
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
     my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
-    my $notification_level = "notificaiton level: $summary_level"; 
-    $tip = sprintf("%s %s (%s)",
-                "PerlWatcher",
-                $App::PerlWatcher::Engine::VERSION // "dev", 
-                $notification_level)
+    $tip = sprintf("%s (notificaiton level: %s)", $self->title,  $summary_level)
         . ($tip ? "\n\n" . $tip : "");
     $self->_set_label($tip, $summary->{max_level}, $has_updated);
 }
@@ -182,32 +194,32 @@ sub _set_label {
 
 sub _consruct_gui {
     my $self = shift;
-    
+
     my $vbox = Gtk2::VBox->new( 0, 3 );
     $self->window->add($vbox);
 
     my $hbox = Gtk2::HBox->new( 0, 5 );
     $vbox->pack_start( $hbox, 0, 0, 0 );
-    
+
     my $summary_level_switcher = App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher
         ->new($self, sub { $self->summary_level(shift) } );
     push @{ $self->focus_tracked_widgets }, $summary_level_switcher;
     $summary_level_switcher->set_active_level($self->summary_level);
-        
+
     $hbox->pack_start( $summary_level_switcher, 0, 0, 5 );
-    
+
     my $reset_button = Gtk2::Button->new_with_label('Mark as read');
     $reset_button->signal_connect( 'clicked' => sub {
             $self->_mark_as_read;
-    });    
+    });
     $hbox->pack_end( $reset_button, 1, 1, 0 );
-    $vbox->pack_start($self->statuses_tree, 1, 1, 0 );                       
-    $vbox->show_all;               
+    $vbox->pack_start($self->statuses_tree, 1, 1, 0 );
+    $vbox->show_all;
 }
 
 sub _present {
     my ( $self, $x, $y ) = @_;
-    my $window = $self->window; 
+    my $window = $self->window;
     #if ( !$window->get('visible') ) {
         $window->hide_all;
         $window->move( $x, $y );
@@ -219,14 +231,14 @@ sub _present {
 
 sub _trigger_undertaker {
     my $self = shift;
-    my $idle = 
+    my $idle =
         $self->engine->config->{frontend}->{gtk}->{uninteresting_after} // 5;
     my $timer = AnyEvent->timer (
         after => $idle,
         cb    => sub {
             $self->_mark_as_read;
         },
-    );                                       
+    );
     push @{ $self->timers }, $timer;
 }
 
