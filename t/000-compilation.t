@@ -7,7 +7,7 @@ use warnings;
 use Test::More;
 
 use_ok 'App::PerlWatcher::UI::Gtk2::Application';
-use_ok 'App::PerlWatcher::UI::Gtk2::EngineBackend';
+use_ok 'App::PerlWatcher::UI::Gtk2::Gtk2Backend';
 use_ok 'App::PerlWatcher::UI::Gtk2::StatusesModel';
 use_ok 'App::PerlWatcher::UI::Gtk2::StatusesTreeView';
 use_ok 'App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher';
