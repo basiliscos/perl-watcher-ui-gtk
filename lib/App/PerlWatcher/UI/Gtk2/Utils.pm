@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Utils;
 {
-  $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.04';
+  $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.05';
 }
 
 use 5.12.0;

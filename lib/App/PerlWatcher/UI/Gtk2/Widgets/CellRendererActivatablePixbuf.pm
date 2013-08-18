@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf;
 {
-  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.04';
+  $App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf::VERSION = '0.05';
 }
 
 use Glib::Object::Subclass

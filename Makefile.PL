@@ -26,7 +26,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "App::PerlWatcher::UI::Gtk2",
   "PREREQ_PM" => {
-    "App::PerlWatcher::Engine" => "0.11",
+    "App::PerlWatcher::Engine" => "0.13",
     "Devel::Comments" => "v1.1.4",
     "File::ShareDir::ProjectDistDir" => "v0.4.4",
     "Gtk2" => "1.247",
@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
   "TEST_REQUIRES" => {
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.04",
+  "VERSION" => "0.05",
   "test" => {
     "TESTS" => "t/*.t"
   }
