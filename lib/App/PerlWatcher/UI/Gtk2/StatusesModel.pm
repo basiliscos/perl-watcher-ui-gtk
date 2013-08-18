@@ -8,7 +8,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
-use App::PerlWatcher::Level qw/:levels/;
+use App::PerlWatcher::Levels;
 use App::PerlWatcher::Shelf;
 use aliased 'App::PerlWatcher::Status';
 use Carp;
