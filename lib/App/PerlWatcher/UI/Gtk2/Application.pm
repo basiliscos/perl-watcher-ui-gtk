@@ -23,6 +23,7 @@ use Scalar::Util qw/weaken/;
 
 with qw/App::PerlWatcher::Frontend/;
 
+has 'config'                => ( is => 'ro', required => 1);
 has 'icon'                  => ( is => 'lazy');
 has 'icon_widget'           => ( is => 'lazy');
 has 'tray_menu'             => ( is => 'lazy');
@@ -111,8 +112,7 @@ sub _build_window {
     my $window = Gtk2::Window->new;
 
     my $default_size =
-      $self->engine->config->{frontend}->{gtk}->{window_size}
-      // [ 500, 300 ];
+      $self->config->{window_size} // [ 500, 300 ];
 
     $window->set_default_size(@$default_size);
     $window->set_title($self->title);
@@ -235,7 +235,7 @@ sub _present {
 sub _trigger_undertaker {
     my $self = shift;
     my $idle =
-        $self->engine->config->{frontend}->{gtk}->{uninteresting_after} // 5;
+        $self->config->{uninteresting_after} // 5;
     my $timer = AnyEvent->timer (
         after => $idle,
         cb    => sub {
