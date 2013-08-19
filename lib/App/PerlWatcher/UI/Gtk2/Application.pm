@@ -116,8 +116,9 @@ sub _build_window {
 
     #$window -> set_decorated(0);
     #$window -> set_opacity(0); # not works yet
-    $window->set_skip_taskbar_hint(1);
-    $window->set_type_hint('tooltip');
+    my $hide_from_taskbar = $self->config->{hide_from_taskbar} // 1;
+    $window->set_skip_taskbar_hint($hide_from_taskbar);
+    #$window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
     $window->signal_connect('focus-out-event' => sub {
             # focus out
@@ -127,7 +128,8 @@ sub _build_window {
                     $child_window_focus &&= $_->considered_active
                         for(@{ $self->focus_tracked_widgets });
                     my $do_hide = ($has_tracked_widgets && $child_window_focus);
-                    # $do_hide
+                    #$do_hide = 0;
+                    ### $do_hide
                     if($do_hide) {
                         $window->hide;
                         $self->timers([]); # kill all timers
@@ -148,6 +150,8 @@ sub BUILD {
     $self->_consruct_gui;
 
     $self->_set_label("just started", LEVEL_ANY, 0);
+    $self->window->show_all
+        unless($self->config->{hide_on_startup});
     return $self;
 }
 
