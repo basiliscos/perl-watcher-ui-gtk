@@ -26,11 +26,14 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "App::PerlWatcher::UI::Gtk2",
   "PREREQ_PM" => {
+    "AnyEvent" => "7.04",
     "App::PerlWatcher::Engine" => "0.13",
     "Devel::Comments" => "v1.1.4",
     "File::ShareDir::ProjectDistDir" => "v0.4.4",
     "Gtk2" => "1.247",
     "Gtk2::TrayIcon" => "0.06",
+    "List::MoreUtils" => "0.33",
+    "Moo" => "1.003000",
     "aliased" => "0.31"
   },
   "TEST_REQUIRES" => {
