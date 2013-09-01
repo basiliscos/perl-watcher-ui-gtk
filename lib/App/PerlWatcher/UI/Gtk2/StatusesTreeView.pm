@@ -16,14 +16,14 @@ use base 'Gtk2::TreeView';
 
 sub new {
     my $class = shift;
-    my ($tree_store, $app) = @_; 
+    my ($tree_store, $app) = @_;
     # create an entry
     my $self = Gtk2::TreeView->new($tree_store);
     $self -> {_tree_store   } = $tree_store;
     $self -> {_app          } = $app;
     bless $self, $class;
     $self->_construct;
-    return $self;    
+    return $self;
 }
 
 sub _is_unseen {
@@ -33,7 +33,7 @@ sub _is_unseen {
     #my $r = $status->timestamp > $last_seen;
     my $r = $self->{_tree_store}->shelf->status_changed($status);
     return $r;
-}                        
+}
 
 sub _construct {
     my $self = shift;
@@ -51,11 +51,11 @@ sub _constuct_actions_column {
     $column->pack_start( $renderer, 0 );
     $self->append_column($column);
     $column->set_cell_data_func(
-        $renderer, 
+        $renderer,
         sub {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
             my $value = $model->get_value( $iter, 0 );
-            my $pixbuff = 
+            my $pixbuff =
                 $value->does('App::PerlWatcher::Openable')
                 ? get_icon("open-link")
                 :  undef;
@@ -80,7 +80,7 @@ sub _constuct_icon_column {
     my $self = shift;
     my $renderer_icon = Gtk2::CellRendererPixbuf->new;
     $renderer_icon->set('stock-id' => 1);
-    
+
     my $column_icon = Gtk2::TreeViewColumn->new;
     $column_icon->pack_start( $renderer_icon, 0 );
     $self->append_column($column_icon);
@@ -123,8 +123,8 @@ sub _constuct_description_column {
             }
             else {
                 $cell->set( text => $value -> content );
-            }                                 
-            
+            }
+
         }
     );
 }
@@ -146,7 +146,7 @@ sub _constuct_activation_column {
         },
         $tree_store
     );
-    
+
     my $column_toggle = Gtk2::TreeViewColumn->new;
     $column_toggle->pack_start( $renderer_toggle, 1 );
     $column_toggle->set_title('_active');
@@ -182,7 +182,7 @@ sub _constuct_timestamp_column {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
             my $value = $model->get_value( $iter, 0 );
             my $timestamp = $value->timestamp;
-            my $text = $timestamp ? strftime('%H:%M:%S',localtime $timestamp) 
+            my $text = $timestamp ? strftime('%H:%M:%S',localtime $timestamp)
                                   : q{}
                                   ;
             ## $text
