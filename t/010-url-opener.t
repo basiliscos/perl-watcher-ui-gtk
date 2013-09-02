@@ -12,14 +12,16 @@ use aliased 'App::PerlWatcher::UI::Gtk2::URLOpener';
 
 my @opened_urls;
 
+my $callback = {
+    my $openables = shift;
+    @opened_urls = @$openables;
+};
+
 package Test::PerlWatcher::TestOpenable {
     use Moo;
 
     with 'App::PerlWatcher::Openable';
-    sub open_url {
-        my $self = shift;
-        push @opened_urls, $self->url;
-    }
+    sub open_url { }
 };
 
 sub tick {
@@ -29,8 +31,10 @@ sub tick {
 }
 
 my $uo = URLOpener->new(
-    delay => 0,
+    delay    => 0,
+    callback => $callback,
 );
+
 ok $uo, "instance has been created";
 
 {

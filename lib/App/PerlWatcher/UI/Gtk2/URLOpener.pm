@@ -41,6 +41,15 @@ to open all openables.
 
 has 'delay' => (is => 'rw', required => 1);
 
+=attr callback
+
+Callback is been invoked when timer triggers. It's arguments
+is the array ref openables.
+
+=cut
+
+has 'callback' => (is => 'rw', required => 1);
+
 =method delayed_open
 
 Puts the openable into queue and resets the timer. When
@@ -57,8 +66,10 @@ sub delayed_open {
         AnyEvent->timer(
             after => $self->delay,
             cb => sub {
-                $_->open_url for( @{ $self->openables } );
+                my $openables = $self->openables;
+                $_->open_url for( @$openables );
                 $self->openables([]);
+                $self->callback->($openables);
             }
         )
     );
