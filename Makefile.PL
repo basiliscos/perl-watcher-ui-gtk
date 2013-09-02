@@ -2,9 +2,9 @@
 use strict;
 use warnings;
 
+use 5.012;
 
-
-use ExtUtils::MakeMaker 6.30;
+use ExtUtils::MakeMaker 6.72;
 
 use File::ShareDir::Install;
 install_share dist => "share";
@@ -15,7 +15,7 @@ my %WriteMakefileArgs = (
   "AUTHOR" => "Ivan Baidakou <dmol\@gmx.com>",
   "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => "6.30",
+    "ExtUtils::MakeMaker" => "6.72",
     "File::ShareDir::Install" => "0.03"
   },
   "DISTNAME" => "App-PerlWatcher-UI-Gtk2",
@@ -34,6 +34,7 @@ my %WriteMakefileArgs = (
     "Gtk2::TrayIcon" => "0.06",
     "List::MoreUtils" => "0.33",
     "Moo" => "1.003000",
+    "Scalar::Util" => "1.25",
     "aliased" => "0.31"
   },
   "TEST_REQUIRES" => {
