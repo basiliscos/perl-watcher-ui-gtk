@@ -13,7 +13,7 @@ use aliased 'App::PerlWatcher::UI::Gtk2::URLOpener';
 my @opened_urls;
 
 my $callback = {
-    my $openables = shift;
+    my ($openables) = @_;
     @opened_urls = @$openables;
 };
 
