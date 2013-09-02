@@ -7,13 +7,19 @@ use warnings;
 use AnyEvent;
 use Test::More;
 
-use aliased 'App::PerlWatcher::UI::Gtk2::URLOpener';
+use aliased qw/App::PerlWatcher::UI::Gtk2::URLOpener/;
 
+sub tick {
+    my $cv = AnyEvent->condvar;
+    my $w = AnyEvent->idle (cb => sub { $cv->send });
+    $cv->recv;
+}
 
 my @opened_urls;
 
-my $callback = {
-    @opened_urls = @{ $_[0] };
+my $callback = sub {
+    my $opened_items = shift;
+    @opened_urls = map { $_->url } @$opened_items;
 };
 
 package Test::PerlWatcher::TestOpenable {
@@ -22,12 +28,6 @@ package Test::PerlWatcher::TestOpenable {
     with 'App::PerlWatcher::Openable';
     sub open_url { }
 };
-
-sub tick {
-    my $cv = AnyEvent->condvar;
-    my $w = AnyEvent->idle (cb => sub { $cv->send });
-    $cv->recv;
-}
 
 my $uo = URLOpener->new(
     delay    => 0,
@@ -42,7 +42,7 @@ ok $uo, "instance has been created";
       );
     tick;
     is_deeply \@opened_urls, ["a"] ;
-}
+};
 
 {
     @opened_urls = ();
@@ -54,7 +54,7 @@ ok $uo, "instance has been created";
       );
     tick;
     is_deeply [sort @opened_urls], ["b", "c"];
-}
+};
 
 {
     @opened_urls = ();
@@ -74,6 +74,6 @@ ok $uo, "instance has been created";
     $cv->recv;
     tick;
     is_deeply [sort @opened_urls], ["d", "e"];
-}
+};
 
 done_testing;
