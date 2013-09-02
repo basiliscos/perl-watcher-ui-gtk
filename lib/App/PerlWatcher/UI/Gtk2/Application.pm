@@ -39,6 +39,11 @@ The timestamp last seen of user-visible watcher statuses.
 =cut
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
 
+=head1 CREDITS
+
+Hanna Mineeva
+
+=cut
 
 sub _build_statuses_tree {
     my $self = shift;
