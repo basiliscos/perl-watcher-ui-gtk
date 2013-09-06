@@ -26,4 +26,4 @@ requires:
   Scalar::Util: 1.25
   aliased: 0.31
   perl: 5.012
-version: 0.05
+version: 0.06
