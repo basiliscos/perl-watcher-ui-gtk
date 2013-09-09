@@ -1,4 +1,5 @@
 .travis.yml
+App-PerlWatcher-UI-Gtk2-0.06/.travis.yml
 Changes
 LICENSE
 MANIFEST
@@ -27,6 +28,7 @@ share/assets/icons/notice.png
 share/assets/icons/notice_new.png
 share/assets/icons/open-link.png
 share/assets/icons/opening-link.png
+share/assets/icons/perl_watcher.png
 share/assets/icons/unknown.png
 share/assets/icons/unknown_new.png
 share/assets/icons/warn.png
