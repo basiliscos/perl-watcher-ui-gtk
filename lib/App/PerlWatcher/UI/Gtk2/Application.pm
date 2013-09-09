@@ -10,7 +10,7 @@ use App::PerlWatcher::Levels;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
 use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
 use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
-use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon/;
+use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon_file/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
@@ -145,6 +145,8 @@ sub _build_window {
              });
             0;
     });
+    my $icon_file = get_icon_file("assets/icons/perl_watcher.png");
+    $window->set_icon_from_file($icon_file);
 
     return $window;
 }
