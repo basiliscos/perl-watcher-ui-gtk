@@ -38,6 +38,10 @@ my %WriteMakefileArgs = (
     "aliased" => "0.31"
   },
   "TEST_REQUIRES" => {
+    "File::Spec" => 0,
+    "File::Temp" => 0,
+    "IO::Handle" => 0,
+    "IPC::Open3" => 0,
     "Test::More" => "0.98"
   },
   "VERSION" => "0.07",
