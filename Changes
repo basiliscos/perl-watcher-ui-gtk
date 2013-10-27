@@ -1,4 +1,5 @@
-0.07_1    2013-10-27 18:25:08 Europe/Minsk
+0.07_2    2013-10-27 18:28:52 Europe/Minsk
+    Enabled pod_weaver
 
 0.07_1    2013-10-27 13:37:58 Europe/Minsk
     Minor fixes in distribution, e.g. add git repository url

@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_1';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_2';
 }
 
 use 5.12.0;
@@ -273,7 +273,7 @@ App::PerlWatcher::UI::Gtk2::Application
 
 =head1 VERSION
 
-version 0.07_1
+version 0.07_2
 
 =head1 ATTRIBUTES
 

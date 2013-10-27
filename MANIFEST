@@ -17,6 +17,7 @@ lib/App/PerlWatcher/UI/Gtk2/SummaryLevelSwitcher.pm
 lib/App/PerlWatcher/UI/Gtk2/URLOpener.pm
 lib/App/PerlWatcher/UI/Gtk2/Utils.pm
 lib/App/PerlWatcher/UI/Gtk2/Widgets/CellRendererActivatablePixbuf.pm
+pod2htmd.tmp
 share/assets/icons/alert.png
 share/assets/icons/alert_new.png
 share/assets/icons/ignore.png

@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::StatusesTreeView;
 {
-  $App::PerlWatcher::UI::Gtk2::StatusesTreeView::VERSION = '0.07_1';
+  $App::PerlWatcher::UI::Gtk2::StatusesTreeView::VERSION = '0.07_2';
 }
 
 use 5.12.0;
@@ -235,7 +235,7 @@ App::PerlWatcher::UI::Gtk2::StatusesTreeView
 
 =head1 VERSION
 
-version 0.07_1
+version 0.07_2
 
 =head1 AUTHOR
 

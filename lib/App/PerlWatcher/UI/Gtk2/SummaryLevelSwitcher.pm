@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 {
-  $App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher::VERSION = '0.07_1';
+  $App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher::VERSION = '0.07_2';
 }
 
 use 5.12.0;
@@ -98,7 +98,7 @@ App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher
 
 =head1 VERSION
 
-version 0.07_1
+version 0.07_2
 
 =head1 AUTHOR
 
