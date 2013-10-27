@@ -1,4 +1,5 @@
-0.07_2    2013-10-27 18:37:20 Europe/Minsk
+0.07_2    2013-10-27 18:41:42 Europe/Minsk
+    Minimally document all modules: add abstract section
     Enabled pod_weaver
 
 0.07_1    2013-10-27 13:37:58 Europe/Minsk
