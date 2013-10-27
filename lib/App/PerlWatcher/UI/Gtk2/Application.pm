@@ -37,6 +37,7 @@ has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(
 The timestamp last seen of user-visible watcher statuses.
 
 =cut
+
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
 
 =head1 SCREENSHOT
