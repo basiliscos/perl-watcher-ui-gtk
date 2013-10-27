@@ -5,6 +5,7 @@ CORE:
 
 BUILD/ECOSYSTEM:
 # Document modules with Pod::Weaver
+# Look at xacobeo sources
 
 GUI:
 # remember collapse/expand state
