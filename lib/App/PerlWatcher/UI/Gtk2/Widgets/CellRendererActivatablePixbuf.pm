@@ -7,8 +7,10 @@ use 5.12.0;
 use strict;
 use warnings;
 
+use Gtk2::CellRendererPixbuf;
+
 use Glib::Object::Subclass
-    'Gtk2::CellRendererPixbuf',
+    Gtk2::CellRendererPixbuf,
     signals => {
         activated => {
             param_types => ['Glib::String'],
