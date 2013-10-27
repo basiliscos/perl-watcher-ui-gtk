@@ -4,6 +4,8 @@ use 5.12.0;
 use strict;
 use warnings;
 
+use Gtk2;
+
 use Glib::Object::Subclass
     Gtk2::CellRendererPixbuf::,
     signals => {
