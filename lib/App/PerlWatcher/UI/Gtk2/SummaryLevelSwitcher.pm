@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
+# ABSTRACT: Widget for switching notification levels in nice combobox (labels and icons)
 
 use 5.12.0;
 use strict;

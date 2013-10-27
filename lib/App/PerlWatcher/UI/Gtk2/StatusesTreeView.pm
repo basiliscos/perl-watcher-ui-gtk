@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::StatusesTreeView;
+# ABSTRACT: Widget for displaying statuses in tree-like presentation
 
 use 5.12.0;
 use strict;

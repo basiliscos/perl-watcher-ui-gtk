@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::StatusesModel;
+# ABSTRACT: Stores statuses in tree-like structure
 
 use 5.12.0;
 use strict;

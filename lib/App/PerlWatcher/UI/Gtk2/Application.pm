@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::Application;
+# ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
 use 5.12.0;
 use strict;

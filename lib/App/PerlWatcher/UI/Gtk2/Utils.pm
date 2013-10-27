@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::Utils;
+# ABSTRACT: Helping functions for Gtk2 app
 
 use 5.12.0;
 use strict;

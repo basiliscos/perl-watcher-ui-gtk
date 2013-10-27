@@ -1,4 +1,6 @@
 {{$NEXT}}
+    Minimally document all modules: add abstract section
+    Enabled pod_weaver
 
 0.07_1    2013-10-27 13:37:58 Europe/Minsk
     Minor fixes in distribution, e.g. add git repository url

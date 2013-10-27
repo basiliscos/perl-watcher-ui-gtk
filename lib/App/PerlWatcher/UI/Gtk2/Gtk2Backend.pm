@@ -1,4 +1,5 @@
 package App::PerlWatcher::UI::Gtk2::Gtk2Backend;
+# ABSTRACT: Backend class for Gtk2 loop
 
 use 5.12.0;
 use strict;
