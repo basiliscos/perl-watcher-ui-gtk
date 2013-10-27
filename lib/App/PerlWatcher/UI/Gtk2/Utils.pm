@@ -2,6 +2,7 @@ package App::PerlWatcher::UI::Gtk2::Utils;
 {
   $App::PerlWatcher::UI::Gtk2::Utils::VERSION = '0.07_2';
 }
+# ABSTRACT: Helping functions for Gtk2 app
 
 use 5.12.0;
 use strict;
@@ -50,7 +51,7 @@ __END__
 
 =head1 NAME
 
-App::PerlWatcher::UI::Gtk2::Utils
+App::PerlWatcher::UI::Gtk2::Utils - Helping functions for Gtk2 app
 
 =head1 VERSION
 

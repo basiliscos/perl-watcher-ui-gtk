@@ -2,6 +2,7 @@ package App::PerlWatcher::UI::Gtk2::Application;
 {
   $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.07_2';
 }
+# ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
 use 5.12.0;
 use strict;
@@ -269,7 +270,7 @@ __END__
 
 =head1 NAME
 
-App::PerlWatcher::UI::Gtk2::Application
+App::PerlWatcher::UI::Gtk2::Application - Main application class for Gtk2 frontend for PerlWatcher
 
 =head1 VERSION
 

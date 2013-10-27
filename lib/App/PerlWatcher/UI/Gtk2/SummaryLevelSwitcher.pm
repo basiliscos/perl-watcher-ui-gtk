@@ -2,6 +2,7 @@ package App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 {
   $App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher::VERSION = '0.07_2';
 }
+# ABSTRACT: Widget for switching notification levels in nice combobox (labels and icons)
 
 use 5.12.0;
 use strict;
@@ -94,7 +95,7 @@ __END__
 
 =head1 NAME
 
-App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher
+App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher - Widget for switching notification levels in nice combobox (labels and icons)
 
 =head1 VERSION
 

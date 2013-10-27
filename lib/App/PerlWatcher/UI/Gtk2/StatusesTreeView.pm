@@ -2,6 +2,7 @@ package App::PerlWatcher::UI::Gtk2::StatusesTreeView;
 {
   $App::PerlWatcher::UI::Gtk2::StatusesTreeView::VERSION = '0.07_2';
 }
+# ABSTRACT: Widget for displaying statuses in tree-like presentation
 
 use 5.12.0;
 use strict;
@@ -231,7 +232,7 @@ __END__
 
 =head1 NAME
 
-App::PerlWatcher::UI::Gtk2::StatusesTreeView
+App::PerlWatcher::UI::Gtk2::StatusesTreeView - Widget for displaying statuses in tree-like presentation
 
 =head1 VERSION
 
