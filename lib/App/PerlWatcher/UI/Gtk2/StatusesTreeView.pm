@@ -212,9 +212,15 @@ sub _constuct_timestamp_column {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
             my $value = $model->get_value( $iter, 0 );
             my $timestamp = $value->timestamp;
-            my $text = $timestamp ? strftime('%H:%M:%S',localtime $timestamp)
-                                  : q{}
-                                  ;
+            my $text = q{};
+            if ($timestamp) {
+                my @t = localtime $timestamp;
+                my ($sec, $min, $hour) = @t;
+                my $format = ($sec + $min + $hour != 0)
+                    ? '%H:%M:%S'
+                    : '%y/%m/%d';
+                $text = strftime($format, @t);
+            }
             ## $text
             $cell->set( text => $text );
         }
