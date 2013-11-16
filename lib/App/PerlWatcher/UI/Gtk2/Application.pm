@@ -182,7 +182,8 @@ sub update {
     my $visible = $self->window->get('visible');
     $self->statuses_model->update($status, $visible, sub {
             my $path = shift;
-            $self->statuses_tree->expand_row($path, 1);
+            $self->statuses_tree->expand_row($path, 1)
+                if($status->watcher->memory->data->{expanded});
     });
     #$self->statuses_tree->expand_all;
     $self->_trigger_undertaker if ( $visible );

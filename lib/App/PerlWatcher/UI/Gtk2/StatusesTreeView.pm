@@ -10,7 +10,7 @@ use aliased 'App::PerlWatcher::Level' => 'Level', qw/:levels/;
 use App::PerlWatcher::Openable;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon/;
 use App::PerlWatcher::UI::Gtk2::URLOpener;
-use Devel::Comments;
+use Devel::Comments -ENV;
 use Gtk2;
 use List::Util qw/first/;
 use POSIX qw(strftime);
@@ -33,6 +33,18 @@ sub new {
 
     bless $self, $class;
     $self->_construct;
+    my $expander_collapser = sub {
+        my ($iter, $expanded) = @_;
+        my $value = $tree_store->get_value( $iter, 0 );
+        $value->watcher->memory->data->{expanded} = $expanded
+            if $value->isa('App::PerlWatcher::Status');
+    };
+    $self->signal_connect("row-expanded" => sub {
+        $expander_collapser->($_[1], 1);
+    });
+    $self->signal_connect("row-collapsed" => sub {
+        $expander_collapser->($_[1], 0);
+    });
     return $self;
 }
 
@@ -76,6 +88,20 @@ sub _construct {
     $self -> _constuct_activation_column;
     $self -> _constuct_actions_column;
     $self -> _constuct_timestamp_column;
+
+    # expand/collapse
+    $self->{_tree_store}->foreach(
+        sub {
+            my ($model, $path, $iter) = @_;
+            my $value = $self->{_tree_store}->get_value( $iter, 0 );
+            if ( $value->isa('App::PerlWatcher::Status') ) {
+                my $expanded = $value->watcher->memory->data->{expanded} // 0;
+                return $self->expand_row($path, 1)
+                    if $expanded;
+                $self->collapse_row($path);
+            }
+        }
+    );
 }
 
 sub _constuct_actions_column {

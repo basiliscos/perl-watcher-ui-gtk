@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.08      2013-11-17 00:25:59 Europe/Minsk
     Format timestamp event with 'y-m-d' format instead of 'h-M-s' when the last 
     isn't available
 
