@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.08';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.09';
 }
 # ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
@@ -164,11 +164,16 @@ sub update {
     my $visible = $self->window->get('visible');
     $self->statuses_model->update($status, $visible, sub {
             my $path = shift;
-            $self->statuses_tree->expand_row($path, 1);
+            $self->statuses_tree->expand_row($path, 1)
+                if($status->watcher->memory->data->{expanded});
     });
     #$self->statuses_tree->expand_all;
     $self->_trigger_undertaker if ( $visible );
     $self->_update_summary;
+}
+
+sub poll {
+    my ( $self, $watcher ) = @_;
 }
 
 sub show {
@@ -274,7 +279,7 @@ App::PerlWatcher::UI::Gtk2::Application - Main application class for Gtk2 fronte
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 ATTRIBUTES
 
