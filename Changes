@@ -1,4 +1,4 @@
-0.09      2013-12-01 19:20:24 Europe/Minsk
+0.09      2013-12-03 00:55:53 Europe/Minsk
 
 0.08      2013-11-17 00:25:59 Europe/Minsk
     Format timestamp event with 'y-m-d' format instead of 'h-M-s' when the last 
