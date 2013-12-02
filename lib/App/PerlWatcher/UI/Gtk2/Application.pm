@@ -15,6 +15,8 @@ use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon_file/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
+use aliased qw/Image::Base::Gtk2::Gdk::Pixbuf/;
+use Memoize;
 use Moo;
 use POSIX qw(strftime);
 use Scalar::Util qw/weaken/;
@@ -30,6 +32,8 @@ has 'title'                 => ( is => 'lazy');
 has 'statuses_tree'         => ( is => 'lazy');
 has 'timers'                => ( is => 'rw', default => sub{ []; } );
 has 'summary_level'         => ( is => 'rw', default => sub{ LEVEL_NOTICE; } );
+has 'max_level'             => ( is => 'rw', default => sub{ LEVEL_ANY; } );
+has 'max_level_new'         => ( is => 'rw', default => sub{ 0; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
 
@@ -171,10 +175,26 @@ sub BUILD {
 
     $self->_construct_gui;
 
-    $self->_set_label("just started", LEVEL_ANY, 0);
+    my $icon = get_level_icon(LEVEL_ANY, 0);
+    $self->icon_widget->set(pixbuf => $icon);
+
     $self->window->show_all
         unless($self->config->{hide_on_startup});
     return $self;
+}
+
+memoize('_get_polling_icon');
+sub _get_polling_icon {
+    my ($level, $unseen, $polling) = @_;
+    my $icon = get_level_icon($level, $unseen);
+    return $icon unless $polling;
+
+    my $copy = $icon->copy;
+    my ($w, $h) = ($copy->get_width, $copy->get_height);
+    my $image = Pixbuf->new(-pixbuf => $copy);
+    my ($x0, $y0, $x1, $y1) = ($h-5, $w-5, $h-2, $w-2);
+    $image->rectangle($x0, $y0, $x1, $y1, '#FF0000', 1);
+    return $image->get('-pixbuf');
 }
 
 sub update {
@@ -188,6 +208,12 @@ sub update {
     #$self->statuses_tree->expand_all;
     $self->_trigger_undertaker if ( $visible );
     $self->_update_summary;
+}
+
+sub poll {
+    my ( $self, $watcher ) = @_;
+    my $icon = _get_polling_icon($self->max_level, $self->max_level_new, 1);
+    $self->icon_widget->set(pixbuf => $icon);
 }
 
 sub show {
@@ -209,13 +235,16 @@ sub _update_summary {
     my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
     $tip = sprintf("%s (notificaiton level: %s)", $self->title,  $summary_level)
         . ($tip ? "\n\n" . $tip : "");
-    $self->_set_label($tip, $summary->{max_level}, $has_updated);
+    $self->max_level_new($has_updated);
+    $self->max_level($summary->{max_level});
+    $self->icon_widget->set_tooltip_markup($tip);
+    $self->_update_tray_icon;
 }
 
-sub _set_label {
-    my ( $self, $tip, $level, $is_new ) = @_;
-    my $icon = get_level_icon($level, $is_new);
-    $self->icon_widget->set_tooltip_markup($tip);
+sub _update_tray_icon {
+    my ( $self ) = @_;
+    my $is_polling = @{ $self->engine->polling_watchers };
+    my $icon = _get_polling_icon($self->max_level, $self->max_level_new, $is_polling);
     $self->icon_widget->set(pixbuf => $icon);
 }
 
