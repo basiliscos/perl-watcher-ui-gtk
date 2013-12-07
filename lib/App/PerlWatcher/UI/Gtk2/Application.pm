@@ -232,9 +232,14 @@ sub _update_summary {
     my $summary = $self->statuses_model->summary($summary_level);
     my $has_updated =  @{ $summary->{updated} };
     my $sorted_statuses = $self->engine->sort_statuses($summary->{updated});
+    my @polling = @{ $self->engine->polling_watchers };
     my $tip = join "\n", map { $_->description->() } @$sorted_statuses;
     $tip = sprintf("%s (notificaiton level: %s)", $self->title,  $summary_level)
-        . ($tip ? "\n\n" . $tip : "");
+        . ($tip ? "\n\nUpdated:\n" . $tip : "");
+    if (@polling) {
+        $tip .= "\n\nPolling:";
+        $tip .= join("\n", map { $_->description } @polling);
+    }
     $self->max_level_new($has_updated);
     $self->max_level($summary->{max_level});
     $self->icon_widget->set_tooltip_markup($tip);
