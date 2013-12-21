@@ -11,18 +11,20 @@ use warnings;
 use AnyEvent;
 use App::PerlWatcher::Engine;
 use App::PerlWatcher::Levels;
-use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
-use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
 use App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon_file/;
 use Devel::Comments;
 use Gtk2;
 use Gtk2::TrayIcon;
-use aliased qw/Image::Base::Gtk2::Gdk::Pixbuf/;
+use Keybinder;
 use Memoize;
 use Moo;
 use POSIX qw(strftime);
 use Scalar::Util qw/weaken/;
+
+use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesModel/;
+use aliased qw/App::PerlWatcher::UI::Gtk2::StatusesTreeView/;
+use aliased qw/Image::Base::Gtk2::Gdk::Pixbuf/;
 
 with qw/App::PerlWatcher::Frontend/;
 
@@ -126,25 +128,25 @@ sub _build_window {
     $window->set_skip_taskbar_hint($hide_from_taskbar);
     #$window->set_type_hint('tooltip');
     $window->signal_connect( delete_event => \&Gtk2::Widget::hide_on_delete );
-    $window->signal_connect('focus-out-event' => sub {
-            # focus out
-            my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
-                    my $has_tracked_widgets = @{ $self->focus_tracked_widgets };
-                    my $child_window_focus = 0;
-                    $child_window_focus &&= $_->considered_active
-                        for(@{ $self->focus_tracked_widgets });
-                    my $do_hide = ($has_tracked_widgets && $child_window_focus);
-                    #$do_hide = 0;
-                    ### $do_hide
-                    if($do_hide) {
-                        $window->hide;
-                        $self->timers([]); # kill all timers
-                        $self->last_seen(time);
-                    }
-                    undef $idle_w;
-             });
-            0;
-    });
+    # $window->signal_connect('focus-out-event' => sub {
+    #         # focus out
+    #         my $idle_w; $idle_w = AnyEvent->timer(after => 0.5, cb => sub {
+    #                 my $has_tracked_widgets = @{ $self->focus_tracked_widgets };
+    #                 my $child_window_focus = 0;
+    #                 $child_window_focus &&= $_->considered_active
+    #                     for(@{ $self->focus_tracked_widgets });
+    #                 my $do_hide = ($has_tracked_widgets && $child_window_focus);
+    #                 #$do_hide = 0;
+    #                 ### $do_hide
+    #                 if($do_hide) {
+    #                     $window->hide;
+    #                     $self->timers([]); # kill all timers
+    #                     $self->last_seen(time);
+    #                 }
+    #                 undef $idle_w;
+    #          });
+    #         0;
+    # });
     my $icon_file = get_icon_file("assets/icons/perl_watcher.png");
     $window->set_icon_from_file($icon_file);
 
@@ -162,7 +164,17 @@ sub BUILD {
 
     $self->window->show_all
         unless($self->config->{hide_on_startup});
+
+    $self->_register_global_hotkeys;
     return $self;
+}
+
+sub _register_global_hotkeys {
+    my $self = shift;
+    my $shortcuts = $self->config->{global_shortcuts};
+    my $rise_key = $shortcuts->{rise};
+    bind_key($rise_key, sub { $self->_present; })
+        if($rise_key);
 }
 
 memoize('_get_polling_icon');
@@ -270,7 +282,8 @@ sub _present {
     my $window = $self->window;
     #if ( !$window->get('visible') ) {
         $window->hide_all;
-        $window->move( $x, $y );
+        $window->move($x, $y)
+            if(defined($x) && defined($y));
         $window->show_all;
         $window->present;
         $self->_trigger_undertaker;

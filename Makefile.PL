@@ -33,6 +33,7 @@ my %WriteMakefileArgs = (
     "Gtk2" => "1.247",
     "Gtk2::TrayIcon" => "0.06",
     "Image::Base::Gtk2::Gdk::Pixbuf" => 11,
+    "Keybinder" => "0.02",
     "List::MoreUtils" => "0.33",
     "Moo" => "1.003000",
     "Scalar::Util" => "1.25",
