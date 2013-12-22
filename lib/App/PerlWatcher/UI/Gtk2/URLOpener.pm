@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::URLOpener;
 {
-  $App::PerlWatcher::UI::Gtk2::URLOpener::VERSION = '0.09';
+  $App::PerlWatcher::UI::Gtk2::URLOpener::VERSION = '0.10';
 }
 # ABSTRACT: The class is responsible for opening urls after a shord idle.
 
@@ -9,6 +9,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
+use List::MoreUtils qw/any/;
 use Moo;
 use Scalar::Util qw/weaken/;
 
@@ -28,14 +29,15 @@ has 'callback' => (is => 'rw', required => 1);
 
 sub delayed_open {
     my ($self, $openable) = @_;
-    push @{ $self->openables }, $openable;
+    my $openables = $self->openables;
+    push @$openables, $openable
+        unless( any {$_ == $openable} @$openables);
 
     weaken $self;
     $self->timer(
         AnyEvent->timer(
             after => $self->delay,
             cb => sub {
-                my $openables = $self->openables;
                 $_->open_url for( @$openables );
                 $self->openables([]);
                 $self->callback->($openables);
@@ -56,7 +58,7 @@ App::PerlWatcher::UI::Gtk2::URLOpener - The class is responsible for opening url
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 DESCRIPTION
 

@@ -1,6 +1,6 @@
 package App::PerlWatcher::UI::Gtk2::Application;
 {
-  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.09';
+  $App::PerlWatcher::UI::Gtk2::Application::VERSION = '0.10';
 }
 # ABSTRACT: Main application class for Gtk2 frontend for PerlWatcher
 
@@ -322,7 +322,7 @@ App::PerlWatcher::UI::Gtk2::Application - Main application class for Gtk2 fronte
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 ATTRIBUTES
 
