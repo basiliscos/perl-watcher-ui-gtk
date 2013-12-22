@@ -6,6 +6,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
+use List::MoreUtils qw/any/;
 use Moo;
 use Scalar::Util qw/weaken/;
 
@@ -59,14 +60,15 @@ timer triggers all openables are open and erased from list
 
 sub delayed_open {
     my ($self, $openable) = @_;
-    push @{ $self->openables }, $openable;
+    my $openables = $self->openables;
+    push @$openables, $openable
+        unless( any {$_ == $openable} @$openables);
 
     weaken $self;
     $self->timer(
         AnyEvent->timer(
             after => $self->delay,
             cb => sub {
-                my $openables = $self->openables;
                 $_->open_url for( @$openables );
                 $self->openables([]);
                 $self->callback->($openables);
