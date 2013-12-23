@@ -11,8 +11,9 @@ use App::PerlWatcher::Openable;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon/;
 use App::PerlWatcher::UI::Gtk2::URLOpener;
 use Devel::Comments -ENV;
+use Glib;
 use Gtk2;
-use List::Util qw/first/;
+use List::MoreUtils qw/any/;
 use POSIX qw(strftime);
 
 use base 'Gtk2::TreeView';
@@ -25,7 +26,7 @@ sub new {
     my $open_delay = $app->config->{open_url_delay} // 1;
     my $url_opener = App::PerlWatcher::UI::Gtk2::URLOpener->new(
         delay    => $open_delay,
-        callback => sub { $self->_unmark_opening(shift); },
+        callback => sub { $self->_on_url_opened(shift); },
     );
     $self->{_tree_store   } = $tree_store;
     $self->{_app          } = $app;
@@ -48,6 +49,13 @@ sub new {
     return $self;
 }
 
+sub _on_url_opened {
+    my ($self, $openables) = @_;
+    for (@$openables) {
+        $_->memory->{data}->{url_visited} = 1;
+    }
+}
+
 sub _is_unseen {
     my ($self, $status) = @_;
     my $last_seen = $self -> {_app} -> last_seen;
@@ -57,11 +65,6 @@ sub _is_unseen {
     return $r;
 }
 
-
-sub _unmark_opening {
-    my ($self, $openables) = @_;
-
-};
 
 sub _open_url {
     my ($self, $openable) = @_;
@@ -75,7 +78,7 @@ sub _get_status_icon {
 
 sub _get_openable_icon {
     my ($self, $openable) = @_;
-    my $is_opening = first { $_ == $openable }
+    my $is_opening = any { $_ == $openable }
         @{ $self->{_url_opener}->openables };
     my $icon_name = $is_opening ? 'opening-link' : 'open-link';
     return get_icon($icon_name);
@@ -169,18 +172,25 @@ sub _constuct_description_column {
         $renderer_desc,
         sub {
             my ( $column, $cell, $model, $iter, $func_data ) = @_;
+            my $_text = sub { $_[0] };
+            my $_markup = $_text;
             my $value = $model->get_value( $iter, 0 );
-            my $text;
             if ( $value->isa('App::PerlWatcher::Status') ) {
                 my $status = $value;
-                $text = $status->description->();
-                $text = "<b>$text</b>" if ($self->_is_unseen($status));
-                $cell->set( markup => "$text" );
+                $_text = sub { $status->description->() };
+                $_markup = sub { "<b>$_[0]</b>" }
+                    if ($self->_is_unseen($status));
             }
             else {
-                $cell->set( text => $value -> content );
+                $_text = sub{ $value->content };
+                if ( $value->does('App::PerlWatcher::Openable')
+                    && $value->memory->data->{url_visited} ) {
+                    $_markup = sub { "<span foreground='grey'>$_[0]</span>"};
+                }
             }
-
+            my $text = Glib::Markup::escape_text($_text->());
+            my $markup = $_markup->($text);
+            $cell->set(markup =>  $markup);
         }
     );
 }
