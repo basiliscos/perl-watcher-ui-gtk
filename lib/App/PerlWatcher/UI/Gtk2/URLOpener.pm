@@ -6,6 +6,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
+use Devel::Comments;
 use List::MoreUtils qw/any/;
 use Moo;
 use Scalar::Util qw/weaken/;
@@ -31,7 +32,7 @@ AE timer object, which will open all openables on timeout
 
 =cut
 
-has 'timer' => (is => 'rw');
+has 'timer' => (is => 'rw', clearer => 1);
 
 =attr delay
 
@@ -51,6 +52,26 @@ is the array ref openables.
 
 has 'callback' => (is => 'rw', required => 1);
 
+
+=attr tick_step
+
+The tick step for invocation of tick_callback
+
+=cut
+
+has 'tick_step' => (is => 'rw', default => sub{ 0.1 });
+
+=attr tick_callback
+
+Callback is been invoked, during delay before actual opening
+links. The value is the fraction of time passed left before
+open links. When fraction is 1, that means the moment of opening
+them.
+
+=cut
+
+has 'tick_callback' => (is => 'rw', default => sub{ sub{} });
+
 =method delayed_open
 
 Puts the openable into queue and resets the timer. When
@@ -65,16 +86,23 @@ sub delayed_open {
         unless( any {$_ == $openable} @$openables);
 
     weaken $self;
-    $self->timer(
-        AnyEvent->timer(
-            after => $self->delay,
-            cb => sub {
-                $_->open_url for( @$openables );
-                $self->openables([]);
-                $self->callback->($openables);
-            }
-        )
-    );
+    my $start = AE::now;
+    my $delay = $self->delay;
+    my $end   = $start+$delay;
+    my $timer = AE::timer 0, $self->tick_step, sub {
+        my $now = AE::now;
+        if ($now >= $end) {
+            $self->tick_callback->(1.0, $openables);
+            $_->open_url for( @$openables );
+            $self->openables([]);
+            $self->callback->($openables);
+            $self->clear_timer;
+        } else {
+            my $fraction = ($now-$start)/$delay;
+            $self->tick_callback->($fraction, $openables);
+        }
+    };
+    $self->timer($timer);
 }
 
 1;
