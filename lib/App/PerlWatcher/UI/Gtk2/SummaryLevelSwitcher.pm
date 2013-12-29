@@ -93,6 +93,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 App::PerlWatcher::UI::Gtk2::SummaryLevelSwitcher - Widget for switching notification levels in nice combobox (labels and icons)

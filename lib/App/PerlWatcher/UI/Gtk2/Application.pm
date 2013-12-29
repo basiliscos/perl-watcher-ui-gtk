@@ -41,6 +41,7 @@ has 'max_level'             => ( is => 'rw', default => sub{ LEVEL_ANY; } );
 has 'max_level_new'         => ( is => 'rw', default => sub{ 0; } );
 has 'focus_tracked_widgets' => ( is => 'rw', default => sub{ []; } );
 has 'statuses_model'        => ( is => 'rw', default => sub{ StatusesModel->new(shift); } );
+has 'opening_progressbar'   => (is => 'rw');
 
 
 has 'last_seen'    => ( is => 'rw', default => sub{ time; } );
@@ -64,7 +65,6 @@ sub _build_icon {
                 return 1;
             }
             elsif ( $event->button == 3 ) { # right
-                #$self->_mark_as_read;
                $self->tray_menu->popup(undef,undef,undef,undef,0,0);
                $self->tray_menu->show_all;
                return 1;
@@ -263,11 +263,17 @@ sub _construct_gui {
 
     $hbox->pack_start( $summary_level_switcher, 0, 0, 5 );
 
+    my $opening_progressbar = Gtk2::ProgressBar->new;
+    $opening_progressbar->set_text('link opening...');
+    $opening_progressbar->set_fraction(0.0);
+    $hbox->pack_end( $opening_progressbar, 1, 1, 5 );
+    $self->opening_progressbar($opening_progressbar);
+
     my $reset_button = Gtk2::Button->new_with_label('Mark as read');
     $reset_button->signal_connect( 'clicked' => sub {
             $self->_mark_as_read;
     });
-    $hbox->pack_end( $reset_button, 1, 1, 0 );
+    $hbox->pack_end( $reset_button, 0, 0, 0 );
 
     my $scrolled_window = Gtk2::ScrolledWindow->new;
     $scrolled_window->set_policy("automatic", "automatic");
@@ -275,6 +281,14 @@ sub _construct_gui {
 
     $vbox->pack_start($scrolled_window, 1, 1, 0 );
     $vbox->show_all;
+}
+
+sub opening_tick {
+    my ($self, $fraction) = @_;
+    $self->opening_progressbar->set_fraction($fraction);
+    if($fraction >= 1) {
+        $self->opening_progressbar->set_fraction(0.0);
+    }
 }
 
 sub _present {
@@ -315,6 +329,8 @@ sub _mark_as_read {
 __END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 

@@ -9,6 +9,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
+use Devel::Comments;
 use List::MoreUtils qw/any/;
 use Moo;
 use Scalar::Util qw/weaken/;
@@ -18,13 +19,20 @@ use Scalar::Util qw/weaken/;
 has 'openables'  => ( is => 'rw', default => sub{ []; } );
 
 
-has 'timer' => (is => 'rw');
+has 'timer' => (is => 'rw', clearer => 1);
 
 
 has 'delay' => (is => 'rw', required => 1);
 
 
 has 'callback' => (is => 'rw', required => 1);
+
+
+
+has 'tick_step' => (is => 'rw', default => sub{ 0.1 });
+
+
+has 'tick_callback' => (is => 'rw', default => sub{ sub{} });
 
 
 sub delayed_open {
@@ -34,16 +42,23 @@ sub delayed_open {
         unless( any {$_ == $openable} @$openables);
 
     weaken $self;
-    $self->timer(
-        AnyEvent->timer(
-            after => $self->delay,
-            cb => sub {
-                $_->open_url for( @$openables );
-                $self->openables([]);
-                $self->callback->($openables);
-            }
-        )
-    );
+    my $start = AE::now;
+    my $delay = $self->delay;
+    my $end   = $start+$delay;
+    my $timer = AE::timer 0, $self->tick_step, sub {
+        my $now = AE::now;
+        if ($now >= $end) {
+            $self->tick_callback->(1.0, $openables);
+            $_->open_url for( @$openables );
+            $self->openables([]);
+            $self->callback->($openables);
+            $self->clear_timer;
+        } else {
+            my $fraction = ($now-$start)/$delay;
+            $self->tick_callback->($fraction, $openables);
+        }
+    };
+    $self->timer($timer);
 }
 
 1;
@@ -51,6 +66,8 @@ sub delayed_open {
 __END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -84,6 +101,17 @@ to open all openables.
 
 Callback is been invoked when timer triggers. It's arguments
 is the array ref openables.
+
+=head2 tick_step
+
+The tick step for invocation of tick_callback
+
+=head2 tick_callback
+
+Callback is been invoked, during delay before actual opening
+links. The value is the fraction of time passed left before
+open links. When fraction is 1, that means the moment of opening
+them.
 
 =head1 METHODS
 

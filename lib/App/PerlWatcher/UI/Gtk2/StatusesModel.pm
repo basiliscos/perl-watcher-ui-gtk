@@ -128,6 +128,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 App::PerlWatcher::UI::Gtk2::StatusesModel - Stores statuses in tree-like structure

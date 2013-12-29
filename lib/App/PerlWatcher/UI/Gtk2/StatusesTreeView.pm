@@ -13,7 +13,7 @@ use aliased 'App::PerlWatcher::Level' => 'Level', qw/:levels/;
 use App::PerlWatcher::Openable;
 use App::PerlWatcher::UI::Gtk2::Utils qw/get_level_icon get_icon/;
 use App::PerlWatcher::UI::Gtk2::URLOpener;
-use Devel::Comments -ENV;
+use Devel::Comments;
 use Glib;
 use Gtk2;
 use List::MoreUtils qw/any/;
@@ -28,8 +28,13 @@ sub new {
     my $self = Gtk2::TreeView->new($tree_store);
     my $open_delay = $app->config->{open_url_delay} // 1;
     my $url_opener = App::PerlWatcher::UI::Gtk2::URLOpener->new(
-        delay    => $open_delay,
-        callback => sub { $self->_on_url_opened(shift); },
+        delay         => $open_delay,
+        callback      => sub { $self->_on_url_opened(shift); },
+        tick_step     => 0.1,
+        tick_callback => sub {
+            my $fraction = shift;
+            $app->opening_tick($fraction);
+        }
     );
     $self->{_tree_store   } = $tree_store;
     $self->{_app          } = $app;
@@ -271,6 +276,8 @@ sub _constuct_timestamp_column {
 __END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 

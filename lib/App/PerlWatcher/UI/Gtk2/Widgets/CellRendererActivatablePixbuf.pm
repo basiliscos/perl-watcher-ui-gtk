@@ -39,6 +39,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 App::PerlWatcher::UI::Gtk2::Widgets::CellRendererActivatablePixbuf - CellRenderer with triggers some action on clicking on some image in cell

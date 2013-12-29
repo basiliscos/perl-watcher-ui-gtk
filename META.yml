@@ -12,7 +12,7 @@ configure_requires:
   ExtUtils::MakeMaker: 6.72
   File::ShareDir::Install: 0.03
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300036, CPAN::Meta::Converter version 2.131560'
+generated_by: 'Dist::Zilla version 5.006, CPAN::Meta::Converter version 2.133380'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -25,6 +25,7 @@ requires:
   File::ShareDir::ProjectDistDir: v0.4.4
   Gtk2: 1.247
   Gtk2::TrayIcon: 0.06
+  Hash::Merge: 0.200
   Image::Base::Gtk2::Gdk::Pixbuf: 11
   Keybinder: 0.02
   List::MoreUtils: 0.33

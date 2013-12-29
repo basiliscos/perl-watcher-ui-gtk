@@ -49,6 +49,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 App::PerlWatcher::UI::Gtk2::Utils - Helping functions for Gtk2 app

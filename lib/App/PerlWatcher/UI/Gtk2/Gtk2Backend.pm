@@ -27,6 +27,8 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 App::PerlWatcher::UI::Gtk2::Gtk2Backend - Backend class for Gtk2 loop
