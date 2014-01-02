@@ -216,7 +216,7 @@ sub _constuct_activation_column {
             my $status         = $tree_store->get_value( $iter, 0 );
             my $w              = $status->watcher;
             my $current_active = $w->active;
-            $w->active( !$current_active );
+            $w->activate( !$current_active );
         },
         $tree_store
     );
