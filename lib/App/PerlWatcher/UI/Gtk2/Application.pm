@@ -322,6 +322,7 @@ sub _mark_as_read {
     $self->timers([]);
     $self->statuses_model->stash_outdated(time);
     $self->_update_summary;
+    $self->statuses_tree->queue_draw;
 }
 
 1;

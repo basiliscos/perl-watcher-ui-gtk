@@ -81,6 +81,7 @@ sub stash_outdated {
             }
             my $path = $self->get_path($iter);
             $self->row_changed($path, $iter);
+            $self->row_has_child_toggled($path, $iter);
         }
     }
 }
