@@ -192,6 +192,9 @@ sub _constuct_description_column {
                     && $value->memory->data->{url_visited} ) {
                     $_markup = sub { "<span foreground='grey'>$_[0]</span>"};
                 }
+                if (! $value->memory->data->{seen}) {
+                    $_markup = sub { "<b>$_[0]</b>" };
+                }
             }
             my $text = Glib::Markup::escape_text($_text->());
             my $markup = $_markup->($text);

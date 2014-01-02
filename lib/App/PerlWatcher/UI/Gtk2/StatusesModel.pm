@@ -66,10 +66,19 @@ sub stash_outdated {
         values %{ $self -> {_watchers} };
     for( @outdated ) {
         if ( $self->{_shelf}->stash_status($_) ) {
+            # $_->memory->data->{seen} = 1;
             my $iter = $self -> {_watchers}{ $_->watcher }{iterator};
+            my $child_iter = $self->iter_children($iter);
+            while ($child_iter) {
+                my $item = $self->get_value($child_iter, 0);
+                my $path = $self->get_path($iter);
+                $item->memory->data->{seen} = 1;
+                $child_iter = $self->iter_next($child_iter);
+                $self->row_changed($path, $iter);
+            }
             my $path = $self->get_path($iter);
-            # emit event
             $self->row_changed($path, $iter);
+            $self->row_has_child_toggled($path, $iter);
         }
     }
 }
